@@ -1,0 +1,67 @@
+RLBench offers a highly configurable observation space and a modular action space, allowing you to
+  tailor them to your specific needs. Here’s a breakdown of both:
+
+  Observation Space
+
+  The observation space in RLBench is defined by the ObservationConfig class
+  (rlbench/observation_config.py) and can be a combination of low-dimensional state information and
+  high-dimensional image data.
+
+  When using the rlbench/gym.py wrapper, the observation space is a gym.spaces.Dict with the following
+  possible keys:
+
+  Low-Dimensional State:
+
+   * joint_velocities: The velocities of the robot's joints.
+   * joint_positions: The positions of the robot's joints.
+   * joint_forces: The forces being applied to the robot's joints.
+   * gripper_open: A boolean indicating whether the gripper is open or closed.
+   * gripper_pose: The 6D pose of the gripper.
+   * gripper_joint_positions: The positions of the gripper's joints.
+   * gripper_touch_forces: The forces being detected by the gripper's touch sensors.
+   * task_low_dim_state: A task-specific low-dimensional state vector.
+
+  High-Dimensional State (Images):
+
+  You can configure multiple cameras, each providing the following:
+
+   * left_shoulder_rgb: RGB image from the left shoulder camera.
+   * right_shoulder_rgb: RGB image from the right shoulder camera.
+   * overhead_rgb: RGB image from the overhead camera.
+   * wrist_rgb: RGB image from the wrist camera.
+   * front_rgb: RGB image from the front camera.
+
+  For each camera, you can also enable depth images, point clouds, and segmentation masks. The
+  resolution of these images is also configurable.
+
+  Action Space
+
+  The action space in RLBench is determined by the ActionMode class
+  (rlbench/action_modes/action_mode.py), which is a combination of an arm action mode and a gripper
+  action mode.
+
+  Arm Action Modes (`rlbench/action_modes/arm_action_modes.py`):
+
+  You can choose from several modes to control the robot's arm:
+
+   * Joint-Space Control:
+       * ABS_JOINT_VELOCITY: Control the absolute velocity of each of the 7 joints.
+       * DELTA_JOINT_VELOCITY: Control the change in velocity of each of the 7 joints.
+       * ABS_JOINT_POSITION: Control the absolute position of each of the 7 joints.
+       * DELTA_JOINT_POSITION: Control the change in position of each of the 7 joints.
+   * End-Effector-Space Control:
+       * ABS_EE_POSE_WORLD_FRAME: Control the absolute pose (position + quaternion) of the end-effector in
+         the world frame (7 values).
+       * DELTA_EE_POSE_WORLD_FRAME: Control the change in pose of the end-effector (7 values).
+       * EE_VELOCITY_WORLD_FRAME: Control the linear and angular velocity of the end-effector (6 values).
+
+  Gripper Action Modes (`rlbench/action_modes/gripper_action_modes.py`):
+
+   * Discrete: A single discrete action (0 for close, 1 for open).
+   * Continuous: A single continuous action (from 0.0 for closed to 1.0 for open).
+
+  The final action space is a gym.spaces.Box that concatenates the arm and gripper actions. For example,
+  if you use DELTA_EE_POSE_WORLD_FRAME for the arm (7 values) and Discrete for the gripper (1 value),
+  your total action space will be an 8-dimensional continuous vector. The rlbench/gym.py wrapper handles
+  the creation of this gym.spaces.Box with the appropriate bounds and dimensions based on the selected
+  action mode.
