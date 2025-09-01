@@ -53,13 +53,6 @@ obs_config.right_shoulder_camera.image_size = (128, 128)
 obs_config.overhead_camera.image_size = (128, 128)
 obs_config.wrist_camera.image_size = (128, 128)
 
-# Enable all 5 cameras your model was trained on
-obs_config.front_camera.render_mode = "rgb"
-obs_config.left_shoulder_camera.render_mode = "rgb"
-obs_config.right_shoulder_camera.render_mode = "rgb"
-obs_config.overhead_camera.render_mode = "rgb"
-obs_config.wrist_camera.render_mode = "rgb"
-
 obs_config.set_all_high_dim(True)
 obs_config.set_all_low_dim(True)
 
@@ -75,6 +68,11 @@ env.launch()
 
 task = env.get_task(ReachTarget)
 descriptions, obs = task.reset()
+
+# The task returns multiple descriptions. We select descriptions[2], which is
+# "reach the {color_name} sphere", and capitalize it to perfectly match
+# the "Reach the {color_name} sphere" format from the conversion script.
+instruction = descriptions[2].capitalize()
 
 rewards = []
 step = 0
@@ -135,7 +133,7 @@ while not done:
         "observation.images.right_shoulder_rgb": right_shoulder_image,
         "observation.images.overhead_rgb": overhead_image,
         "observation.images.wrist_rgb": wrist_image,
-        "task": descriptions[0],
+        "task": instruction,
     }
 
     # --- End of modifications ---
