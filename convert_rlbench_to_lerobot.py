@@ -64,9 +64,9 @@ def convert_rlbench_to_lerobot(rlbench_data_dir: Path, lerobot_repo_id: str):
             "dtype": "float32",
             "shape": (7,),
             "names": [
-                "joint_velocities_0", "joint_velocities_1", "joint_velocities_2",
-                "joint_velocities_3", "joint_velocities_4", "joint_velocities_5",
-                "joint_velocities_6"
+                "joint_positions_0", "joint_positions_1", "joint_positions_2",
+                "joint_positions_3", "joint_positions_4", "joint_positions_5",
+                "joint_positions_6"
             ],
         },
     }
@@ -122,6 +122,14 @@ def convert_rlbench_to_lerobot(rlbench_data_dir: Path, lerobot_repo_id: str):
                         break
                     images[key] = Image.open(img_path)
                 else:
+                    # Determine the action: next joint positions
+                    if step_idx < len(low_dim_obs) - 1:
+                        next_obs = low_dim_obs[step_idx + 1]
+                        action_data = next_obs.joint_positions.astype(np.float32)
+                    else:
+                        # For the last step, the action is to maintain the current position
+                        action_data = obs.joint_positions.astype(np.float32)
+
                     # Prepare the frame data only if all images are found
                     frame = {
                         "observation.images.left_shoulder_rgb": images["left_shoulder_rgb"],
@@ -130,7 +138,7 @@ def convert_rlbench_to_lerobot(rlbench_data_dir: Path, lerobot_repo_id: str):
                         "observation.images.wrist_rgb": images["wrist_rgb"],
                         "observation.images.front_rgb": images["front_rgb"],
                         "observation.state": np.concatenate([obs.joint_positions, [float(obs.gripper_open)]]).astype(np.float32),
-                        "action": obs.joint_velocities.astype(np.float32),
+                        "action": action_data,
                     }
                     dataset.add_frame(frame, task=task)
 

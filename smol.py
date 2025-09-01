@@ -2,7 +2,7 @@
 
 import numpy as np
 from rlbench.action_modes.action_mode import MoveArmThenGripper
-from rlbench.action_modes.arm_action_modes import JointVelocity
+from rlbench.action_modes.arm_action_modes import JointPosition
 from rlbench.action_modes.gripper_action_modes import Discrete
 from rlbench.environment import Environment
 from rlbench.observation_config import ObservationConfig
@@ -29,7 +29,7 @@ policy = SmolVLAPolicy.from_pretrained(model_path, dataset_stats=dataset_stats)
 # --- End of modifications ---
 
 # Wrapper class to specify the correct arm action size
-class ArmJointVelocity(JointVelocity):
+class ArmJointPosition(JointPosition):
     def action_shape(self, scene: Scene) -> tuple:
         # The arm has 7 joints
         return (7,)
@@ -62,7 +62,7 @@ obs_config.set_all_low_dim(True)
 
 env = Environment(
     action_mode=MoveArmThenGripper(
-        arm_action_mode=ArmJointVelocity(), gripper_action_mode=Discrete()),
+        arm_action_mode=ArmJointPosition(), gripper_action_mode=Discrete()),
     obs_config=obs_config,
     headless=False,
     arm_max_velocity=1.0,
@@ -154,7 +154,6 @@ while not done and step < 200:
     # We pad the action with one zero for the gripper action.
     numpy_action = action.squeeze(0).to("cpu").numpy()
     action_history.append(numpy_action)
-    numpy_action = np.pad(numpy_action, ((0, 0), (0, 1)), 'constant') if numpy_action.ndim == 2 else np.pad(numpy_action, (0, 1), 'constant')
 
 
     # --- End of modifications ---
