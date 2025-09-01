@@ -1,15 +1,4 @@
-#Infering from SmolVLA on Reach Target task
-
-import numpy as np
-from rlbench.action_modes.action_mode import MoveArmThenGripper
-from rlbench.action_modes.arm_action_modes import JointVelocity
-from rlbench.action_modes.gripper_action_modes import Discrete
-from rlbench.environment import Environment
-from rlbench.observation_config import ObservationConfig
-from rlbench.tasks import ReachTarget
-from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 import torch
-from rlbench.backend.scene import Scene
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from tqdm import tqdm
 

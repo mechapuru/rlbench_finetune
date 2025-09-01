@@ -10,11 +10,15 @@ from rlbench.tasks import ReachTarget
 from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 import torch
 from rlbench.backend.scene import Scene
-from lerobot.datasets.lerobot_dataset import LeRobotDataset
-from tqdm import tqdm
 
-# ToDo Loading Normalization Stats
 
+
+# --- Start of modifications ---
+
+# 1. Load normalization stats from file
+print("Loading normalization stats from normalization_stats.pt...")
+dataset_stats = torch.load("normalization_stats.pt")
+print("Normalization stats loaded.")
 
 # 2. Load local model
 # Path to your trained model checkpoint.
