@@ -285,7 +285,7 @@ def parse_args():
     parser.add_argument('--save_path', type=str, default='/scratch/rl_data', help='Where to save the demos.')
     parser.add_argument('--tasks', nargs='*', default=[], help='The tasks to collect. If empty, all tasks are collected.')
     parser.add_argument('--image_size', nargs=2, type=int, default=[128, 128], help='The size of the images to save.')
-    parser.add_argument('--renderer', type=str, choices=['opengl', 'opengl3'], default='opengl3', help='The renderer to use. opengl does not include shadows, but is faster.')
+    parser.add_argument('--renderer', type=str, choices=['opengl', 'opengl3'], default='opengl', help='The renderer to use. opengl does not include shadows, but is faster.')
     parser.add_argument('--processes', type=int, default=1, help='The number of parallel processes during collection.')
     parser.add_argument('--episodes_per_task', type=int, default=10, help='The number of episodes to collect per task.')
     parser.add_argument('--variations', type=int, default=-1, help='Number of variations to collect per task. -1 for all.')
