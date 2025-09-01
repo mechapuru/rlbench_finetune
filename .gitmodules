@@ -1,3 +1,4 @@
 [submodule "lerobot"]
 	path = lerobot
 	url = git@github.com:mechapuru/lerobot_for_rlbench.git
+	branch = main

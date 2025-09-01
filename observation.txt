@@ -10,8 +10,6 @@ RLBench offers a highly configurable observation space and a modular action spac
   When using the rlbench/gym.py wrapper, the observation space is a gym.spaces.Dict with the following
   possible keys:
 
-  Low-Dimensional State:
-
    * joint_velocities: The velocities of the robot's joints.
    * joint_positions: The positions of the robot's joints.
    * joint_forces: The forces being applied to the robot's joints.
@@ -65,3 +63,7 @@ RLBench offers a highly configurable observation space and a modular action spac
   your total action space will be an 8-dimensional continuous vector. The rlbench/gym.py wrapper handles
   the creation of this gym.spaces.Box with the appropriate bounds and dimensions based on the selected
   action mode.
+
+
+Training Command:
+python /home/puruojha/rlbench/lerobot/src/lerobot/scripts/train.py --dataset.repo_id=language_instructed --policy.type=smolvla --batch_size=32 --steps=2000 --output_dir=outputs/train/my_smolvla --job_name=my_smolvla_training --policy.device=cuda --wandb.enable=True --policy.push_to_hub=false

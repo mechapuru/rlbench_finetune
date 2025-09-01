@@ -282,7 +282,7 @@ def run(i, lock, task_index, variation_count, results, file_lock, tasks, args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="RLBench Dataset Generator")
-    parser.add_argument('--save_path', type=str, default='/tmp/rlbench_data/', help='Where to save the demos.')
+    parser.add_argument('--save_path', type=str, default='/scratch/rl_data', help='Where to save the demos.')
     parser.add_argument('--tasks', nargs='*', default=[], help='The tasks to collect. If empty, all tasks are collected.')
     parser.add_argument('--image_size', nargs=2, type=int, default=[128, 128], help='The size of the images to save.')
     parser.add_argument('--renderer', type=str, choices=['opengl', 'opengl3'], default='opengl3', help='The renderer to use. opengl does not include shadows, but is faster.')
