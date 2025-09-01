@@ -10,7 +10,50 @@ from rlbench.tasks import ReachTarget
 from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 import torch
 from rlbench.backend.scene import Scene
+from lerobot.datasets.lerobot_dataset import LeRobotDataset
+from tqdm import tqdm
 
+# --- Start of modifications ---
+
+# 1. Load dataset and calculate normalization stats
+print("Loading dataset to calculate normalization stats...")
+# The dataset repo_id from your training configuration.
+dataset = LeRobotDataset("language_instructed")
+
+states = []
+actions = []
+# LeRobotDataset iterates over frames. We collect all states and actions.
+for i in tqdm(range(len(dataset)), desc="Iterating through dataset to get normalization stats"):
+    data = dataset[i]
+    states.append(data["observation.state"])
+    actions.append(data["action"])
+
+states_tensor = torch.stack(states)
+actions_tensor = torch.stack(actions)
+
+state_mean = states_tensor.mean(dim=0)
+state_std = states_tensor.std(dim=0)
+# Add a small epsilon to std to avoid division by zero
+state_std = torch.max(state_std, torch.tensor(1e-6))
+
+
+action_mean = actions_tensor.mean(dim=0)
+action_std = actions_tensor.std(dim=0)
+action_std = torch.max(action_std, torch.tensor(1e-6))
+
+
+dataset_stats = {
+    "observation.state": {"mean": state_mean, "std": state_std},
+    "action": {"mean": action_mean, "std": action_std},
+}
+print("Normalization stats calculated.")
+
+# 2. Load local model
+# Path to your trained model checkpoint.
+model_path = "/home/paddy/rrc/RLBench/RLBench/outputs/train/my_smolvla/checkpoints/002000/pretrained_model"
+policy = SmolVLAPolicy.from_pretrained(model_path, dataset_stats=dataset_stats)
+
+# --- End of modifications ---
 
 # Wrapper class to specify the correct arm action size
 class ArmJointVelocity(JointVelocity):
@@ -19,22 +62,37 @@ class ArmJointVelocity(JointVelocity):
         return (7,)
 
 
-policy = SmolVLAPolicy.from_pretrained("lerobot/smolvla_base")
-# policy.load_state_dict(torch.load("path/to/your/model.pt"))
-
-
 
 print("The input features are",policy.config.input_features)
 print("The output features are",policy.config.output_features)
 
 device = "cuda"
+policy.to(device)
 
+
+# --- Start of modifications ---
+
+# 3. Update observation config to match the trained model
 obs_config = ObservationConfig()
-obs_config.front_camera.image_size = (256, 256)
-obs_config.left_shoulder_camera.image_size = (256, 256)
-obs_config.right_shoulder_camera.image_size = (256, 256)
+# Set image size to 128x128 as expected by the trained model
+obs_config.front_camera.image_size = (128, 128)
+obs_config.left_shoulder_camera.image_size = (128, 128)
+obs_config.right_shoulder_camera.image_size = (128, 128)
+obs_config.overhead_camera.image_size = (128, 128)
+obs_config.wrist_camera.image_size = (128, 128)
+
+# Enable all 5 cameras your model was trained on
+obs_config.front_camera.render_mode = "rgb"
+obs_config.left_shoulder_camera.render_mode = "rgb"
+obs_config.right_shoulder_camera.render_mode = "rgb"
+obs_config.overhead_camera.render_mode = "rgb"
+obs_config.wrist_camera.render_mode = "rgb"
+
 obs_config.set_all_high_dim(True)
 obs_config.set_all_low_dim(True)
+
+# --- End of modifications ---
+
 
 env = Environment(
     action_mode=MoveArmThenGripper(
@@ -51,60 +109,79 @@ step = 0
 done = False
 
 while not done:
-    # Prepare observation for the policy running in Pytorch
-    # The policy expects a 6D state, but the env provides a 7D state for the arm.
-    # We slice the state to 6D, ignoring the last joint.
-    state = torch.from_numpy(obs.joint_positions[:6])
+    # --- Start of modifications ---
+
+    # 4. Prepare observation for the policy
+    # The trained model expects an 8D state: 7 joint positions + 1 gripper open state
+    state = torch.from_numpy(np.concatenate([obs.joint_positions, [float(obs.gripper_open)]]))
+
+    # Get all 5 images from the environment
     front_image = torch.from_numpy(obs.front_rgb)
     left_shoulder_image = torch.from_numpy(obs.left_shoulder_rgb)
     right_shoulder_image = torch.from_numpy(obs.right_shoulder_rgb)
+    overhead_image = torch.from_numpy(obs.overhead_rgb)
+    wrist_image = torch.from_numpy(obs.wrist_rgb)
 
-    # Convert to float32 with image from channel first in [0,255]
-    # to channel last in [-1,1]
+
+    # Convert to float32 in [0, 1] range and permute channels to (C, H, W)
     state = state.to(torch.float32)
-    front_image = front_image.to(torch.float32) / 127.5 - 1
+    front_image = front_image.to(torch.float32) / 255.0
     front_image = front_image.permute(2, 0, 1)
-    left_shoulder_image = left_shoulder_image.to(torch.float32) / 127.5 - 1
+    left_shoulder_image = left_shoulder_image.to(torch.float32) / 255.0
     left_shoulder_image = left_shoulder_image.permute(2, 0, 1)
-    right_shoulder_image = right_shoulder_image.to(torch.float32) / 127.5 - 1
+    right_shoulder_image = right_shoulder_image.to(torch.float32) / 255.0
     right_shoulder_image = right_shoulder_image.permute(2, 0, 1)
+    overhead_image = overhead_image.to(torch.float32) / 255.0
+    overhead_image = overhead_image.permute(2, 0, 1)
+    wrist_image = wrist_image.to(torch.float32) / 255.0
+    wrist_image = wrist_image.permute(2, 0, 1)
+
 
     # Send data tensors from CPU to GPU
     state = state.to(device, non_blocking=True)
     front_image = front_image.to(device, non_blocking=True)
     left_shoulder_image = left_shoulder_image.to(device, non_blocking=True)
     right_shoulder_image = right_shoulder_image.to(device, non_blocking=True)
+    overhead_image = overhead_image.to(device, non_blocking=True)
+    wrist_image = wrist_image.to(device, non_blocking=True)
+
 
     # Add extra (empty) batch dimension, required to forward the policy
     state = state.unsqueeze(0)
     front_image = front_image.unsqueeze(0)
     left_shoulder_image = left_shoulder_image.unsqueeze(0)
     right_shoulder_image = right_shoulder_image.unsqueeze(0)
+    overhead_image = overhead_image.unsqueeze(0)
+    wrist_image = wrist_image.unsqueeze(0)
 
-    print("The shapes of the input tensors are:")
-    print("State:", state.shape)
-    print("Front Image:", front_image.shape)
-    print("Left Shoulder Image:", left_shoulder_image.shape)
-    print("Right Shoulder Image:", right_shoulder_image.shape)
 
-    # Create the policy input dictionary
+    # Create the policy input dictionary with keys matching the model's config
     observation = {
         "observation.state": state,
-        "observation.image": front_image,
-        "observation.image2": left_shoulder_image,
-        "observation.image3": right_shoulder_image,
+        "observation.images.front_rgb": front_image,
+        "observation.images.left_shoulder_rgb": left_shoulder_image,
+        "observation.images.right_shoulder_rgb": right_shoulder_image,
+        "observation.images.overhead_rgb": overhead_image,
+        "observation.images.wrist_rgb": wrist_image,
         "task": descriptions[0],
     }
+
+    # --- End of modifications ---
 
     # Predict the next action with respect to the current observation
     with torch.inference_mode():
         action = policy.select_action(observation)
 
-    # Prepare the action for the environment
-    # The policy outputs a 6D action, but the env expects 7D for the arm and 1D for the gripper.
-    # We pad the action with two zeros for the 7th arm joint and the gripper.
+    # --- Start of modifications ---
+
+    # 5. Prepare the action for the environment
+    # The policy outputs a 7D action, but the env expects 8D (7 for arm and 1 for gripper).
+    # We pad the action with one zero for the gripper action.
     numpy_action = action.squeeze(0).to("cpu").numpy()
-    numpy_action = np.pad(numpy_action, (0, 2), 'constant')
+    numpy_action = np.pad(numpy_action, ((0, 0), (0, 1)), 'constant') if numpy_action.ndim == 2 else np.pad(numpy_action, (0, 1), 'constant')
+
+
+    # --- End of modifications ---
 
     # Step through the environment and receive a new observation
     obs, reward, terminate = task.step(numpy_action)
