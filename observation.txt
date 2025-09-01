@@ -66,4 +66,4 @@ RLBench offers a highly configurable observation space and a modular action spac
 
 
 Training Command:
-python /home/puruojha/rlbench/lerobot/src/lerobot/scripts/train.py --dataset.repo_id=language_instructed --policy.type=smolvla --batch_size=32 --steps=2000 --output_dir=outputs/train/my_smolvla --job_name=my_smolvla_training --policy.device=cuda --wandb.enable=True --policy.push_to_hub=false
+python /home/puruojha/rlbench/lerobot/src/lerobot/scripts/train.py --dataset.repo_id=my_reach_target_dataset --policy.type=smolvla --batch_size=32 --steps=2000 --output_dir=outputs/train/my_smolvla --job_name=smolvla_train_right_data --policy.device=cuda --wandb.enable=True --policy.push_to_hub=false

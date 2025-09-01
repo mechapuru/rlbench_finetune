@@ -7,7 +7,7 @@ from tqdm import tqdm
 # 1. Load dataset and calculate normalization stats
 print("Loading dataset to calculate normalization stats...")
 # The dataset repo_id from your training configuration.
-dataset = LeRobotDataset("language_instructed")
+dataset = LeRobotDataset("my_reach_target_dataset")
 
 states = []
 actions = []

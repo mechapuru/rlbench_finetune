@@ -3,7 +3,7 @@ import pickle
 from pathlib import Path
 
 # Path to a sample pickle file from your dataset
-pickle_path = Path('/scratch/rl_data/reach_target/variation0/episodes/episode0/low_dim_obs.pkl')
+pickle_path = Path('/home/puruojha/rlbench/data_set/reach_target/variation1/episodes/episode2/low_dim_obs.pkl')
 
 print(f"--- Inspecting keys from: {pickle_path} ---")
 
@@ -19,9 +19,13 @@ try:
     obs = demo[0]
 
     print("\nAvailable keys in a single observation object:")
-    # Print all attributes (keys) of the observation object
+    # Print all attributes (keys) of the observation object along with their sizes
     for key in vars(obs).keys():
-        print(f"- {key}")
+        value = getattr(obs, key)
+        if hasattr(value, 'shape'):
+            print(f"- {key}: {value.shape}")
+        else:
+            print(f"- {key}: {type(value)}")
 
 except FileNotFoundError:
     print(f"Error: Could not find the file at {pickle_path}")

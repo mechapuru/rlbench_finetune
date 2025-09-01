@@ -13,6 +13,7 @@ __pycache__/
 build/
 outputs/
 develop-eggs/
+data_set/
 dist/
 downloads/
 outputs/

@@ -105,9 +105,6 @@ def convert_rlbench_to_lerobot(rlbench_data_dir: Path, lerobot_repo_id: str):
                 print(f"Warning: low_dim_obs.pkl not found in {episode_dir}. Skipping.")
                 continue
 
-            # The task description for this episode. For reach_target, it's always the same.
-            task = "Reach the target"
-
             for step_idx, obs in enumerate(low_dim_obs):
                 # Load all 5 RGB images
                 image_keys = [
