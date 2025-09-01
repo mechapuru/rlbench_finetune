@@ -48,6 +48,12 @@ dataset_stats = {
 }
 print("Normalization stats calculated.")
 
+#save normalization
+
+torch.save(dataset_stats, "normalization_stats.pt")
+print("Normalization stats saved to normalization_stats.pt")
+
+
 # 2. Load local model
 # Path to your trained model checkpoint.
 model_path = "/home/paddy/rrc/RLBench/RLBench/outputs/train/my_smolvla/checkpoints/002000/pretrained_model"
