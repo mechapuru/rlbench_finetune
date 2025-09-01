@@ -63,7 +63,10 @@ env = Environment(
     action_mode=MoveArmThenGripper(
         arm_action_mode=ArmJointVelocity(), gripper_action_mode=Discrete()),
     obs_config=obs_config,
-    headless=False)
+    headless=False,
+    arm_max_velocity=1.0,
+    arm_max_acceleration=4.0,
+)
 env.launch()
 
 task = env.get_task(ReachTarget)
