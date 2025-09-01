@@ -10,6 +10,7 @@ from rlbench.tasks import ReachTarget
 from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 import torch
 from rlbench.backend.scene import Scene
+import matplotlib.pyplot as plt
 
 
 
@@ -77,11 +78,12 @@ descriptions, obs = task.reset()
 # the "Reach the {color_name} sphere" format from the conversion script.
 instruction = descriptions[2].capitalize()
 
+action_history = []
 rewards = []
 step = 0
 done = False
 
-while not done:
+while not done and step < 200:
     # --- Start of modifications ---
 
     # 4. Prepare observation for the policy
@@ -151,6 +153,7 @@ while not done:
     # The policy outputs a 7D action, but the env expects 8D (7 for arm and 1 for gripper).
     # We pad the action with one zero for the gripper action.
     numpy_action = action.squeeze(0).to("cpu").numpy()
+    action_history.append(numpy_action)
     numpy_action = np.pad(numpy_action, ((0, 0), (0, 1)), 'constant') if numpy_action.ndim == 2 else np.pad(numpy_action, (0, 1), 'constant')
 
 
@@ -168,3 +171,21 @@ while not done:
     # or the maximum number of iterations is reached (i.e. truncated is True)
     done = terminate
     step += 1
+
+print("Simulation finished. Shutting down environment.")
+env.shutdown()
+
+# Plotting the action values
+action_history = np.array(action_history)
+timesteps = np.arange(action_history.shape[0])
+
+fig, axs = plt.subplots(7, 1, figsize=(10, 20), sharex=True)
+fig.suptitle('Joint Velocity Actions over Time')
+
+for i in range(7):
+    axs[i].plot(timesteps, action_history[:, i])
+    axs[i].set_ylabel(f'Joint {i+1} Velocity')
+
+axs[-1].set_xlabel('Time Step')
+plt.savefig('action_velocities.png')
+print("Saved action velocity plots to action_velocities.png")
