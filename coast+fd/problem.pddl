@@ -1,26 +1,30 @@
 ;; PDDL Problem for LongHorizonGrillTask
-;; Goal: Put chicken on grill, move plate from rack to target, close grill
+;;
+;; Initial State: Grill open, chicken on dish_rack, plate on dish_rack
+;; Goal: Chicken cooked and served on plate at target location
+;;
+;; Required Sequence:
+;; 1. pick(chicken) → place_chicken_on_grill
+;; 2. close_lid
+;; 3. pick(plate) → place_plate_at_target
+;; 4. open_lid
+;; 5. pick_chicken_from_grill → place_chicken_on_plate
 
 (define (problem grill-task)
     (:domain long-horizon-grill)
     
-    (:objects
-        ;; No additional objects needed - using constants from domain
-    )
-    
     (:init
         ;; Initial object positions
-        (On chicken plate_source)
-        (On steak plate_source)
-        (On the_plate plate_source)
+        (On chicken dish_rack)      ; Chicken starts on dish rack
+        (On plate dish_rack)        ; Plate starts on dish rack
         
         ;; Initial gripper state
         (HandEmpty)
         
-        ;; Initial grill state
-        (GrillClosed)
+        ;; Initial grill state - LID IS OPEN
+        (GrillOpen)
         
-        ;; Timestep initialization
+        ;; Timestep initialization (for COAST constraint tracking)
         (AtTimestep t1)
         (Next t1 t2)
         (Next t2 t3)
@@ -45,16 +49,14 @@
     
     (:goal
         (and
-            ;; Chicken must be cooked (on grill with lid closed)
-            (OnGrill chicken)
+            ;; Chicken must be cooked and on plate
+            (ChickenOnPlate)
+            (ChickenCooked)
             
-            ;; Plate moved from source rack to target
-            (On the_plate plate_target)
+            ;; Plate must be at target
+            (PlateAtTarget)
             
-            ;; Chicken on the plate
-            (OnPlate chicken)
-            
-            ;; Grill closed after cooking
+            ;; Grill must be open (from task success conditions)
             (GrillOpen)
             
             ;; Nothing in hand

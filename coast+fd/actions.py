@@ -184,10 +184,14 @@ class PlaceOnGrill(Action):
             return False
 
 
-class OpenGrill(Action):
-    """Open grill lid by rotating the joint."""
+class OpenLid(Action):
+    """Open grill lid using predefined waypoints.
     
-    name = "open_grill"
+    The lid movement follows a constrained semi-circular trajectory
+    defined by waypoints in the RLBench scene.
+    """
+    
+    name = "open_lid"
     parameters = []
     inputs = []
     outputs = [Object("?q", "conf"), Object("?t", "traj")]
@@ -208,44 +212,92 @@ class OpenGrill(Action):
         self.world = world
     
     def execute(self, inputs: Dict[str, Any], outputs: Dict[str, Any]) -> bool:
-        """Open the grill lid."""
+        """Open the grill lid using predefined waypoints.
+        
+        Uses the waypoints defined in the RLBench scene for constrained motion.
+        """
         try:
-            # Get lid joint and rotate it
+            from pyrep.objects.dummy import Dummy
             from pyrep.objects.joint import Joint
+            from pyrep.objects.shape import Shape
+            
+            # Get the lid handle for grasping
+            lid = Shape('lid')
             lid_joint = Joint('lid_joint')
             
-            # Open to 30 degrees
-            target_angle = np.deg2rad(30)
-            current_angle = lid_joint.get_joint_position()
+            # Get waypoints for opening (reverse of close path)
+            # The scene has waypoints like waypoint20, waypoint21, waypoint22
+            waypoint_names = ['waypoint20', 'waypoint21', 'waypoint22']
             
-            # Gradually open
-            steps = 20
-            for i in range(steps):
-                angle = current_angle + (target_angle - current_angle) * (i + 1) / steps
-                lid_joint.set_joint_position(angle)
+            for wp_name in waypoint_names:
+                try:
+                    waypoint = Dummy(wp_name)
+                    target_pos = waypoint.get_position()
+                    target_orient = waypoint.get_orientation()
+                    
+                    # Plan and execute motion to waypoint
+                    path = self.world.plan_to_pose(
+                        position=np.array(target_pos),
+                        orientation=np.array(target_orient),
+                        ignore_collisions=True  # Lid motion may overlap
+                    )
+                    
+                    if path is not None:
+                        # Execute the path
+                        done = False
+                        while not done:
+                            done = path.step()
+                            self.world.step()
+                    else:
+                        # Fallback: use IK directly
+                        config = self.world.solve_ik(
+                            position=np.array(target_pos),
+                            orientation=np.array(target_orient),
+                            ignore_collisions=True
+                        )
+                        if config is not None:
+                            self.world.set_robot_config(config)
+                            for _ in range(5):
+                                self.world.step()
+                                
+                except Exception as e:
+                    print(f"[OpenLid] Waypoint {wp_name} failed: {e}")
+                    continue
+            
+            # Ensure lid joint is at open position (30 degrees)
+            target_angle = np.deg2rad(30)
+            lid_joint.set_joint_position(target_angle)
+            for _ in range(10):
                 self.world.step()
             
             return True
+            
         except Exception as e:
-            print(f"[OpenGrill.execute] Failed: {e}")
+            print(f"[OpenLid.execute] Failed: {e}")
             return False
 
 
-class CloseGrill(Action):
-    """Close grill lid."""
+class CloseLid(Action):
+    """Close grill lid using predefined waypoints.
     
-    name = "close_grill"
+    The lid movement follows a constrained semi-circular trajectory
+    defined by waypoints in the RLBench scene.
+    """
+    
+    name = "close_lid"
     parameters = []
     inputs = []
     outputs = [Object("?q", "conf"), Object("?t", "traj")]
     
     precondition = _and(
         _P("GrillOpen"),
-        _P("HandEmpty")
+        _P("HandEmpty"),
+        _P("ChickenOnGrill")
     )
     
     effect = _and(
-        _P("GrillClosed")
+        _P("GrillClosed"),
+        _P("ChickenCooked")
     )
     
     certified = _and()
@@ -255,23 +307,53 @@ class CloseGrill(Action):
         self.world = world
     
     def execute(self, inputs: Dict[str, Any], outputs: Dict[str, Any]) -> bool:
-        """Close the grill lid."""
+        """Close the grill lid using predefined path.
+        
+        Uses the 'path_close_grill' or 'close_grill' waypoints from RLBench scene.
+        """
         try:
+            from pyrep.objects.dummy import Dummy
             from pyrep.objects.joint import Joint
+            from pyrep.objects.shape import Shape
+            
             lid_joint = Joint('lid_joint')
             
+            # Try to use predefined path first
+            try:
+                close_grill_dummy = Dummy('close_grill')
+                target_pos = close_grill_dummy.get_position()
+                target_orient = close_grill_dummy.get_orientation()
+                
+                # Move to close grill waypoint
+                path = self.world.plan_to_pose(
+                    position=np.array(target_pos),
+                    orientation=np.array(target_orient),
+                    ignore_collisions=True
+                )
+                
+                if path is not None:
+                    done = False
+                    while not done:
+                        done = path.step()
+                        self.world.step()
+                        
+            except Exception as e:
+                print(f"[CloseLid] Predefined path not found, using joint control: {e}")
+            
+            # Close the lid joint
             current_angle = lid_joint.get_joint_position()
             target_angle = 0.0
             
-            steps = 20
+            steps = 30
             for i in range(steps):
                 angle = current_angle + (target_angle - current_angle) * (i + 1) / steps
                 lid_joint.set_joint_position(angle)
                 self.world.step()
             
             return True
+            
         except Exception as e:
-            print(f"[CloseGrill.execute] Failed: {e}")
+            print(f"[CloseLid.execute] Failed: {e}")
             return False
 
 

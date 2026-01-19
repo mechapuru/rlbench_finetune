@@ -11,10 +11,15 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+COAST_Paper.pdf
+COAST_Paper.txt
 OpenGrill_visuals
 PutGroceriesInCupboard_visuals
 long_horizon_scenes_progress.zip
-long_horizon_scenes_progress
+long_horizon_scenes_progress/
+skill_training/
+grill_task_capture/
+readme_files/
 .Python
 build/
 outputs/
