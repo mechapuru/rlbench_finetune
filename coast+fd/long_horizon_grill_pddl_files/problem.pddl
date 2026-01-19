@@ -1,21 +1,21 @@
 ;; PDDL Problem for LongHorizonGrillTask
 ;;
-;; Initial State: Grill open, chicken on dish_rack, plate on dish_rack
+;; Initial State: Grill open, chicken on grill_side, plate on dish_rack
 ;; Goal: Chicken cooked and served on plate at target location
 ;;
 ;; Required Sequence:
-;; 1. pick(chicken) → place_chicken_on_grill
+;; 1. pick(chicken, grill_side) → place(chicken, grill_cooking_area)
 ;; 2. close_lid
-;; 3. pick(plate) → place_plate_at_target
+;; 3. pick(plate, dish_rack) → place(plate, plate_target)
 ;; 4. open_lid
-;; 5. pick_chicken_from_grill → place_chicken_on_plate
+;; 5. pick(chicken, grill_cooking_area) → place(chicken, plate_target)
 
 (define (problem grill-task)
     (:domain long-horizon-grill)
     
     (:init
         ;; Initial object positions
-        (On chicken dish_rack)      ; Chicken starts on dish rack
+        (On chicken grill_side)     ; Chicken starts on grill side (not cooking area)
         (On plate dish_rack)        ; Plate starts on dish rack
         
         ;; Initial gripper state

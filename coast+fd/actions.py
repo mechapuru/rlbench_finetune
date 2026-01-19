@@ -408,7 +408,7 @@ def get_actions(world: Any) -> List[Action]:
         Pick(world),
         Place(world),
         PlaceOnGrill(world),
-        OpenGrill(world),
-        CloseGrill(world),
+        OpenLid(world),
+        CloseLid(world),
         Cook(world),
     ]

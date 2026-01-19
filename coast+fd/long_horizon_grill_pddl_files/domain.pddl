@@ -2,14 +2,14 @@
 ;; Task: Cook chicken on grill, move plate, serve chicken on plate
 ;;
 ;; Sequence:
-;; 1. Pick chicken → Place on grill
-;; 2. Close grill lid (constrained trajectory)
-;; 3. Pick plate from dish_rack → Place on plate_target
-;; 4. Open grill lid
-;; 5. Pick chicken from grill → Place on plate
+;; 1. pick(chicken, dish_rack) → place(chicken, grill_surface)
+;; 2. close_lid
+;; 3. pick(plate, dish_rack) → place(plate, plate_target)
+;; 4. open_lid
+;; 5. pick(chicken, grill_surface) → place(chicken, plate_target)
 
 (define (domain long-horizon-grill)
-    (:requirements :strips :typing :equality :negative-preconditions)
+    (:requirements :strips :typing :equality :negative-preconditions :conditional-effects)
     
     (:types
         object - abstract
@@ -21,17 +21,12 @@
         ;; Manipulable objects
         chicken - object
         plate - object
-        lid - object
-        
-        ;; Distractor (not used in planning but present in scene)
-        ;; steak - object  
         
         ;; Locations
-        grill_surface - location    ; Where meat is placed on grill
-        dish_rack - location        ; Where plate starts
-        plate_target - location     ; Where plate should end up
-        lid_open_position - location    ; Lid resting position when open
-        lid_closed_position - location  ; Lid position when closed
+        grill_side - location           ; Where chicken starts (on grill but not cooking area)
+        grill_cooking_area - location   ; Where meat cooks (under lid)
+        dish_rack - location            ; Where plate starts
+        plate_target - location         ; Where plate should end up
         
         ;; Timesteps (for COAST constraint tracking)
         t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 - timestep
@@ -67,12 +62,17 @@
     
     ;; ==================== Actions ====================
     
-    ;; Pick up an object from a location
+    ;; Generic pick action - pick any object from any location
     (:action pick
         :parameters (?o - object ?l - location ?t1 - timestep ?t2 - timestep)
         :precondition (and
             (On ?o ?l)
             (HandEmpty)
+            ;; Special case: picking from grill requires grill open and chicken cooked
+            (or
+                (not (= ?l grill_cooking_area))
+                (and (= ?l grill_cooking_area) (GrillOpen) (ChickenCooked))
+            )
             (not (FailPick ?o ?l ?t1 ?t2))
             (AtTimestep ?t1)
             (Next ?t1 ?t2)
@@ -83,14 +83,27 @@
             (not (HandEmpty))
             (not (AtTimestep ?t1))
             (AtTimestep ?t2)
+            ;; Clear ChickenOnGrill if picking chicken from grill
+            (when (and (= ?o chicken) (= ?l grill_cooking_area))
+                (not (ChickenOnGrill)))
         )
     )
     
-    ;; Place an object at a location
+    ;; Generic place action - place any object at any location
     (:action place
         :parameters (?o - object ?l - location ?t1 - timestep ?t2 - timestep)
         :precondition (and
             (Holding ?o)
+            ;; Special case: placing on grill requires grill open
+            (or
+                (not (= ?l grill_cooking_area))
+                (and (= ?l grill_cooking_area) (GrillOpen))
+            )
+            ;; Special case: placing chicken on plate requires plate at target and chicken cooked
+            (or
+                (not (and (= ?o chicken) (= ?l plate_target)))
+                (and (= ?o chicken) (= ?l plate_target) (PlateAtTarget) (ChickenCooked))
+            )
             (not (FailPlace ?o ?l ?t1 ?t2))
             (AtTimestep ?t1)
             (Next ?t1 ?t2)
@@ -101,70 +114,19 @@
             (HandEmpty)
             (not (AtTimestep ?t1))
             (AtTimestep ?t2)
-        )
-    )
-    
-    ;; Place chicken on grill (specialized action)
-    (:action place_chicken_on_grill
-        :parameters (?t1 - timestep ?t2 - timestep)
-        :precondition (and
-            (Holding chicken)
-            (GrillOpen)
-            (not (FailPlace chicken grill_surface ?t1 ?t2))
-            (AtTimestep ?t1)
-            (Next ?t1 ?t2)
-        )
-        :effect (and
-            (On chicken grill_surface)
-            (ChickenOnGrill)
-            (not (Holding chicken))
-            (HandEmpty)
-            (not (AtTimestep ?t1))
-            (AtTimestep ?t2)
-        )
-    )
-    
-    ;; Place plate at target
-    (:action place_plate_at_target
-        :parameters (?t1 - timestep ?t2 - timestep)
-        :precondition (and
-            (Holding plate)
-            (not (FailPlace plate plate_target ?t1 ?t2))
-            (AtTimestep ?t1)
-            (Next ?t1 ?t2)
-        )
-        :effect (and
-            (On plate plate_target)
-            (PlateAtTarget)
-            (not (Holding plate))
-            (HandEmpty)
-            (not (AtTimestep ?t1))
-            (AtTimestep ?t2)
-        )
-    )
-    
-    ;; Place chicken on plate (final serving)
-    (:action place_chicken_on_plate
-        :parameters (?t1 - timestep ?t2 - timestep)
-        :precondition (and
-            (Holding chicken)
-            (PlateAtTarget)
-            (ChickenCooked)
-            (AtTimestep ?t1)
-            (Next ?t1 ?t2)
-        )
-        :effect (and
-            (On chicken plate_target)
-            (ChickenOnPlate)
-            (not (Holding chicken))
-            (HandEmpty)
-            (not (AtTimestep ?t1))
-            (AtTimestep ?t2)
+            ;; Track ChickenOnGrill
+            (when (and (= ?o chicken) (= ?l grill_cooking_area))
+                (ChickenOnGrill))
+            ;; Track PlateAtTarget
+            (when (and (= ?o plate) (= ?l plate_target))
+                (PlateAtTarget))
+            ;; Track ChickenOnPlate
+            (when (and (= ?o chicken) (= ?l plate_target) (ChickenCooked))
+                (ChickenOnPlate))
         )
     )
     
     ;; Close grill lid (requires constrained trajectory)
-    ;; Robot must grasp lid and move it along semi-circular path
     (:action close_lid
         :parameters (?t1 - timestep ?t2 - timestep)
         :precondition (and
@@ -197,28 +159,6 @@
         :effect (and
             (GrillOpen)
             (not (GrillClosed))
-            (not (AtTimestep ?t1))
-            (AtTimestep ?t2)
-        )
-    )
-    
-    ;; Pick chicken from grill (after cooking)
-    (:action pick_chicken_from_grill
-        :parameters (?t1 - timestep ?t2 - timestep)
-        :precondition (and
-            (On chicken grill_surface)
-            (GrillOpen)
-            (ChickenCooked)
-            (HandEmpty)
-            (not (FailPick chicken grill_surface ?t1 ?t2))
-            (AtTimestep ?t1)
-            (Next ?t1 ?t2)
-        )
-        :effect (and
-            (Holding chicken)
-            (not (On chicken grill_surface))
-            (not (ChickenOnGrill))
-            (not (HandEmpty))
             (not (AtTimestep ?t1))
             (AtTimestep ?t2)
         )
