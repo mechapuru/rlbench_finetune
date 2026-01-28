@@ -44,7 +44,7 @@ class FastDownwardPlanner(TaskPlanner):
         """Find Fast Downward installation."""
         # Check common locations
         candidates = [
-            Path(__file__).parent.parent.parent / "coast" / "external" / "downward" / "fast-downward.py",
+            Path(__file__).parent.parent.parent / "coast" / "downward" / "fast-downward.py",
             Path.home() / "downward" / "fast-downward.py",
             Path("/usr/local/bin/fast-downward.py"),
         ]

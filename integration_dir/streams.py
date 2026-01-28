@@ -12,6 +12,9 @@ from coast.stream import Stream
 from coast.object import Object
 from coast.formula import _P, _and
 
+# Import actions so they are discoverable by coast.main.load_geometric_actions
+from .actions import Pick, Place, PlaceOnGrill, OpenLid, CloseLid, Cook
+
 
 # ==================== Stream Objects ====================
 

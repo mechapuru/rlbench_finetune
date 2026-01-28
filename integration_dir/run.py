@@ -15,6 +15,8 @@ from typing import Optional
 
 # Add parent directory to path for coast import
 sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add symbolic directory to path to ensure correct package resolution
+sys.path.insert(0, str(Path(__file__).parent.parent / "coast/symbolic"))
 
 from config import CoastConfig
 from world import RLBenchWorld
