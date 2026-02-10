@@ -1,0 +1,24 @@
+{
+  "experiment": "exp3_llm_planner",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "total_trials": 1,
+  "valid_plans": 0,
+  "valid_plan_rate": 0.0,
+  "achieves_goal": 0,
+  "goal_achievement_rate": 0.0,
+  "correct_ordering": 1,
+  "correct_ordering_rate": 1.0,
+  "exact_matches": 0,
+  "exact_match_rate": 0.0,
+  "avg_inference_time": 6.920703411102295,
+  "std_inference_time": 0.0,
+  "ground_truth": [
+    "pick",
+    "place",
+    "open-lid",
+    "pick",
+    "place",
+    "pick",
+    "place"
+  ]
+}

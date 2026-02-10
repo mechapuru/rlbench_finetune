@@ -1,0 +1,83 @@
+# Scene Configuration (Scene-Agnostic)
+# Objects + spatial relationships. NO hardcoded task logic.
+
+objects:
+  mug_box:
+    type: mug
+    scene_handle: mug2
+    initial_location: box_top
+    spatial_relation:
+      type: on_top_of
+      target: box_base
+
+  mug_inside_box:
+    type: mug
+    scene_handle: mug4
+    initial_location: box_inside
+    spatial_relation:
+      type: inside
+      target: box_base
+
+  mug_table:
+    type: mug
+    scene_handle: mug1
+    initial_location: table
+
+  mug_cupboard:
+    type: mug
+    scene_handle: mug3
+    initial_location: cupboard_boundary
+
+  soup:
+    type: can
+    scene_handle: soup
+    initial_location: table
+
+  mustard:
+    type: bottle
+    scene_handle: mustard
+    initial_location: table
+
+  spam:
+    type: tin
+    scene_handle: spam
+    initial_location: table
+
+  sugar:
+    type: box
+    scene_handle: sugar
+    initial_location: table
+
+  crackers:
+    type: cereal
+    scene_handle: crackers
+    initial_location: table
+
+  box_lid:
+    type: lid
+    scene_handle: box_lid
+    initial_location: box_base
+    initial_state: closed
+    spatial_relation:
+      type: covers
+      target: box_base
+
+regions:
+  table:
+    description: main workspace surface
+  box_top:
+    description: top surface of the box
+  box_inside:
+    description: interior of the box container
+  placement_boundary:
+    description: target area for placing objects
+  cupboard_boundary:
+    description: inside the cupboard shelf
+  groceries_boundary:
+    description: groceries storage area
+
+containers:
+  box_base:
+    lid: box_lid
+    interior_region: box_inside
+    top_region: box_top

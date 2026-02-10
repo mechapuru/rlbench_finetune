@@ -1,0 +1,16 @@
+{
+  "total_constraints_learned": 1,
+  "active_constraints": 1,
+  "domain_versions": 4,
+  "constraints": [
+    {
+      "stream": "sample-pick-kin",
+      "inputs": {
+        "object": "mug_inside_box"
+      },
+      "type": "exhausted",
+      "timestamp": "2026-01-30T10:21:37.651341",
+      "attempts": 1
+    }
+  ]
+}

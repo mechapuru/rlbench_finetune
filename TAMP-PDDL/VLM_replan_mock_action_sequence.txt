@@ -1,0 +1,47 @@
+MOCK VIDEO DEMONSTRATION- ACTION SEQUENCE PLANS. MORE FAILURES COULD HAPPEN IF THEY ARE DETECTED.
+THOSE CAN BE VERIFIED WITH ACTUAL VLM OUTPUTS. WORKING ON THAT AS WELL.
+
+
+CYCLE 1:
+📋 INITIAL PLAN (VLM output - has errors)
+  1. pick(soup)
+  2. place(soup, cupboard_boundary)      ← FAILS! mug_cupboard is blocking
+  ...
+  
+  
+  
+CYCLE 2:
+🔄 REPLAN #1
+Trigger: mug_cupboard blocking cupboard_boundary
+New plan:
+1. pick(mug_cupboard)
+2. place(mug_cupboard, placement_boundary)
+3. pick(soup)
+4. place(soup, cupboard_boundary)
+...
+11. open-lid(box_lid)               ← FAILS! mug_box is blocking
+
+    
+ 
+ CYCLE 3:
+ 🔄 REPLAN #2
+  Trigger: mug_box blocking box_lid
+  New plan:
+    1. pick(mug_box)
+    2. place(mug_box, placement_boundary)
+    3. open-lid(box_lid)                 ← SUCCESS!
+    
+    
+CYCLE 4:
+🔍 NEW OBJECT DISCOVERED!
+  After opening box lid, detected: mug_inside_box
+  This object was NOT in the original plan!
+
+🔄 REPLAN #3
+  Trigger: Discovered mug_inside_box after opening lid
+  New plan:
+    1. pick(mug_inside_box)
+    2. place(mug_inside_box, placement_boundary)
+    
+    
+    

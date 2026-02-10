@@ -1,0 +1,233 @@
+LEVEL 1 (SPATIAL)
+============================================================
+
+GOAL: move all groceries to cupboard and move all mugs into box
+
+--- SYSTEM PROMPT ---
+You are a robot task planner. You control a robot arm in a kitchen environment.
+
+Your job is to output a sequence of actions to achieve the given goal.
+
+AVAILABLE ACTIONS:
+1. pick(object) - Pick up an object
+2. place(object, region) - Place held object in a region
+3. open_lid(lid) - Open a lid/cover
+
+OUTPUT FORMAT:
+Output ONLY a numbered list of actions:
+1. action(args)
+2. action(args)
+...
+
+Do NOT include explanations.
+
+=== PDDL DOMAIN FILE (rlbench_kitchen_domain.pddl) ===
+
+(define (domain rlbench_kitchen)
+  (:requirements :strips :equality)
+
+  (:predicates
+      ; Types
+      (robot ?x)
+      (movable ?x)
+      (region ?x)
+      (conf ?x)
+      (pose ?x)
+      (grasp ?x)
+      (traj ?x)
+
+      ;; robot & object state
+      (at-conf ?q)
+      (hand-empty)
+      (holding ?o)
+      (retreated ?o)
+
+      ;; geometry / placements
+      (at-pose ?o ?p)
+      (in-region ?o ?r)
+      (is-home ?q)
+
+      ;; stream-certified symbols
+      (stable ?o ?p ?r)      ; pose places o stably in region r
+      (kin ?o ?p ?g ?q-start ?q-end ?t)   ; feasible pick trajectory
+      (place-kin ?o ?p ?g ?q-start ?q-end ?t) ; feasible place trajectory
+      (motion ?q1 ?q2 ?t) ; feasible motion trajectory
+      
+      ;; Lid specific
+      (lid ?o)
+      (closed ?o)
+      (opened ?o)
+      (can-open-lid ?o ?g ?q1 ?q2 ?t)
+      
+      ;; Obstruction logic
+      (obstructs ?blocker ?blocked)
+  )
+
+  ;;--- ACTIONS ------------------------------------------------------------
+
+  (:action move
+    :parameters (?q1 ?q2 ?t)
+    :precondition (and (conf ?q1) (conf ?q2) (traj ?t)
+                       (at-conf ?q1)
+                       (motion ?q1 ?q2 ?t))
+    :effect (and (not (at-conf ?q1))
+                 (at-conf ?q2)))
+
+  (:action pick
+    :parameters (?o ?p ?g ?q1 ?q2 ?t)
+    :precondition (and
+        (movable ?o) (pose ?p) (grasp ?g) (conf ?q1) (conf ?q2) (traj ?t)
+        (not (lid ?o))
+        (hand-empty)
+        (at-conf ?q1)
+        (at-pose ?o ?p)
+        (kin ?o ?p ?g ?q1 ?q2 ?t)
+        ;; Obstruction check: Nothing must obstruct ?o
+        (forall (?x) (not (obstructs ?x ?o))))
+    :effect (and
+        (not (hand-empty))
+        (holding ?o)
+        (not (at-pose ?o ?p))
+        (at-conf ?q2)
+        ;; Clear obstructions caused by ?o
+        (forall (?y) (when (obstructs ?o ?y) (not (obstructs ?o ?y))))))
+
+  (:action open-lid
+    :parameters (?o ?g ?q1 ?q2 ?t)
+    :precondition (and
+        (lid ?o) (closed ?o) (grasp ?g) (conf ?q1) (conf ?q2) (traj ?t)
+        (hand-empty)
+        (at-conf ?q1)
+        (can-open-lid ?o ?g ?q1 ?q2 ?t)
+        ;; Obstruction check: Nothing must obstruct the lid
+        (forall (?x) (not (obstructs ?x ?o))))
+    :effect (and
+        (hand-empty)
+        (opened ?o)
+        (not (closed ?o))
+        (at-conf ?q2)
+        (not (at-conf ?q1))
+        ;; Opening the lid clears obstructions it causes
+        (forall (?y) (when (obstructs ?o ?y) (not (obstructs ?o ?y))))))
+
+  (:action retreat
+    :parameters (?o ?q1 ?q2 ?t)
+    :precondition (and
+        (movable ?o) (conf ?q1) (conf ?q2) (traj ?t)
+        (holding ?o)
+        (at-conf ?q1)
+        (is-home ?q2)
+        (motion ?q1 ?q2 ?t))
+    :effect (and
+        (not (at-conf ?q1))
+        (at-conf ?q2)
+        (retreated ?o)))
+
+  (:action place
+    :parameters (?o ?p ?g ?r ?q1 ?q2 ?t)
+    :precondition (and
+        (movable ?o) (pose ?p) (grasp ?g) (region ?r) (conf ?q1) (conf ?q2) (traj ?t)
+        (holding ?o)
+        ; (retreated ?o) ; Removed to allow direct placement
+        (at-conf ?q1)
+        (stable ?o ?p ?r)
+        (place-kin ?o ?p ?g ?q1 ?q2 ?t))
+    :effect (and
+        (hand-empty)
+        (not (holding ?o))
+        ; (not (retreated ?o))
+        (at-pose ?o ?p)
+        (in-region ?o ?r)
+        (at-conf ?q2)))
+)
+
+
+=== END DOMAIN FILE ===
+
+CRITICAL RULES FROM DOMAIN:
+1. You MUST pick(X) before you can place(X) - the robot can only hold ONE object at a time
+2. Robot gripper must be empty to pick or open_lid
+
+IMPORTANT SPATIAL RULES:
+1. CHECK THE OBJECT LIST FOR "BLOCKED_BY=X".
+2. If an object is "BLOCKED_BY=X", you CANNOT pick it or open it. It is physically impossible.
+3. You MUST move the blocking object X first.
+4. EXAMPLE: If 'box_lid' is 'BLOCKED_BY=mug', you CANNOT 'open_lid(box_lid)'. You MUST 'pick(mug)' and 'place' it somewhere else first.
+5. "NOT_ACCESSIBLE" means the action will fail constraints.
+
+--- USER PROMPT ---
+=== SCENE STATE ===
+
+## Robot:
+- Gripper: empty
+
+## Objects:
+- mug_box: type=mug, location=box_top, relation=on_top_of(box_base)
+- mug_inside_box: type=mug, location=box_inside, relation=inside(box_base), BLOCKED_BY=box_lid, NOT_ACCESSIBLE
+- mug_table: type=mug, location=table
+- mug_cupboard: type=mug, location=cupboard_boundary
+- soup: type=can, location=table
+- mustard: type=bottle, location=table
+- spam: type=tin, location=table
+- sugar: type=box, location=table
+- crackers: type=cereal, location=table
+- box_lid: type=lid, location=box_base, state=closed, relation=covers(box_base), BLOCKED_BY=mug_box, NOT_ACCESSIBLE
+
+## Regions:
+- table: main workspace surface
+- box_top: top surface of the box
+- box_inside: interior of the box container
+- placement_boundary: target area for placing objects
+- cupboard_boundary: inside the cupboard shelf
+- groceries_boundary: groceries storage area
+
+## GOAL: move all groceries to cupboard and move all mugs into box
+
+## VISUAL CONTEXT:
+The image shows 5 camera views of the scene.
+
+Provide the action sequence to achieve the goal.
+
+--- VLM OUTPUT ---
+1. pick(mug_box)
+2. place(mug_box, box_top)
+3. open_lid(box_lid)
+4. pick(mug_inside_box)
+5. place(mug_inside_box, box_top)
+6. pick(mug_table)
+7. place(mug_table, box_top)
+8. pick(mug_cupboard)
+9. place(mug_cupboard, box_top)
+10. pick(soup)
+11. place(soup, cupboard_boundary)
+12. pick(mustard)
+13. place(mustard, cupboard_boundary)
+14. pick(spam)
+15. place(spam, cupboard_boundary)
+16. pick(sugar)
+17. place(sugar, cupboard_boundary)
+18. pick(crackers)
+19. place(crackers, cupboard_boundary)
+
+--- PARSED PLAN ---
+1. pick(mug_box)
+2. place(mug_box, box_top)
+3. open-lid(box_lid)
+4. pick(mug_inside_box)
+5. place(mug_inside_box, box_top)
+6. pick(mug_table)
+7. place(mug_table, box_top)
+8. pick(mug_cupboard)
+9. place(mug_cupboard, box_top)
+10. pick(soup)
+11. place(soup, cupboard_boundary)
+12. pick(mustard)
+13. place(mustard, cupboard_boundary)
+14. pick(spam)
+15. place(spam, cupboard_boundary)
+16. pick(sugar)
+17. place(sugar, cupboard_boundary)
+18. pick(crackers)
+19. place(crackers, cupboard_boundary)
+
+Inference time: 157.0s

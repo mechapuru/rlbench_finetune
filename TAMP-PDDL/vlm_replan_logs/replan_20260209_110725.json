@@ -1,0 +1,88 @@
+{
+  "goal": "Keep all groceries in the cupboard and mugs on table",
+  "success": false,
+  "total_cycles": 4,
+  "total_replans": 3,
+  "total_actions_completed": 7,
+  "completed_actions": [
+    "pick(mug_box)",
+    "place(mug_box, table)",
+    "open-lid(box_lid)",
+    "pick(sugar)",
+    "place(sugar, cupboard)",
+    "pick(soup)",
+    "place(soup, cupboard)"
+  ],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "is_replan": false,
+      "plan": [
+        "pick(mug_box)",
+        "place(mug_box, table)",
+        "open-lid(box_lid)",
+        "pick(sugar)",
+        "place(sugar, cupboard)",
+        "pick(soup)",
+        "place(soup, cupboard)",
+        "pick(mustard)",
+        "place(mustard, cupboard)",
+        "pick(crackers)",
+        "place(crackers, cupboard)",
+        "pick(mug_table)",
+        "place(mug_table, table)",
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, cupboard)"
+      ],
+      "completed_actions": [
+        "pick(mug_box)",
+        "place(mug_box, table)",
+        "open-lid(box_lid)",
+        "pick(sugar)",
+        "place(sugar, cupboard)",
+        "pick(soup)",
+        "place(soup, cupboard)"
+      ],
+      "failed_action": "pick(mustard)",
+      "error_message": "Object 'mustard' didn't move (displacement: 0.000m)",
+      "success": false
+    },
+    {
+      "cycle_number": 2,
+      "is_replan": true,
+      "plan": [
+        "pick(mustard)",
+        "place(mustard, cupboard)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mustard)",
+      "error_message": "Object 'mustard' didn't move (displacement: 0.000m)",
+      "success": false
+    },
+    {
+      "cycle_number": 3,
+      "is_replan": true,
+      "plan": [
+        "pick(mustard)",
+        "place(mustard, table)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mustard)",
+      "error_message": "Object 'mustard' didn't move (displacement: 0.019m)",
+      "success": false
+    },
+    {
+      "cycle_number": 4,
+      "is_replan": true,
+      "plan": [
+        "pick(mustard)",
+        "place(mustard, table)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mustard)",
+      "error_message": "Object 'mustard' didn't move (displacement: 0.000m)",
+      "success": false
+    }
+  ],
+  "failure_reason": "Max replans exceeded"
+}

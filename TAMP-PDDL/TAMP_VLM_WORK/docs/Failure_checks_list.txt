@@ -1,0 +1,16 @@
+# Run all failure case tests
+  ✓ 1. OBJECT_BLOCKED - Open lid while mug_box on top
+  ✓ 2. LID_CLOSED - Pick mug inside closed box
+  ✓ 3. OBJECT_NOT_FOUND - Pick non-existent object
+  ✓ 4. VALID - Move mug_box to table (should succeed)
+  ✓ 5. ORPHAN_PLACE - Place without pick
+  ✓ 6. PICK_MISMATCH - Pick/Place different objects
+
+
+These are the failures considered. Had run VLM outputs deliberately where if one of the conditions pop up,  the execution stops, notes down the failure condition and the replanning prompt is altered based on that.
+
+
+
+more failure conditions, that could happen but I can't voluntarily check this. Possible failures only:
+1. PLACEMENT_FAILED (Object not in target region, might have slipped during execution)
+2. GRASP_FAILED (when its not picked properly, might have slipped again)

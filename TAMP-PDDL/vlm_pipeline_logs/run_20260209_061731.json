@@ -1,0 +1,54 @@
+{
+  "start_time": "2026-02-09T06:14:13.967823",
+  "config": {
+    "use_mock_vlm": false,
+    "use_real_env": true,
+    "headless": false,
+    "max_replan_attempts": 3,
+    "save_logs": true,
+    "log_dir": "vlm_pipeline_logs",
+    "vlm_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "vlm_4bit": true
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "type": "initial",
+      "plan_result": {
+        "success": true,
+        "skeleton": [
+          "open-lid(box_lid)",
+          "pick(mug_inside_box)",
+          "place(mug_inside_box, table)",
+          "pick(box_lid)",
+          "place(box_lid, cupboard_boundary)",
+          "pick(soup)",
+          "place(soup, cupboard_boundary)",
+          "pick(mustard)",
+          "place(mustard, cupboard_boundary)",
+          "pick(spam)",
+          "place(spam, cupboard_boundary)",
+          "pick(sugar)",
+          "place(sugar, cupboard_boundary)",
+          "pick(crackers)",
+          "place(crackers, cupboard_boundary)"
+        ],
+        "inference_time": 184.87073945999146
+      },
+      "execution_result": {
+        "status": "failed",
+        "completed": 0,
+        "total": 15,
+        "error": "Cannot open lid - mug_box is on top"
+      }
+    }
+  ],
+  "final_result": {
+    "goal": "Keep all groceries in cupboard and all mugs on table",
+    "success": false,
+    "total_cycles": 1,
+    "final_status": "failed",
+    "actions_completed": 0,
+    "actions_total": 15
+  }
+}

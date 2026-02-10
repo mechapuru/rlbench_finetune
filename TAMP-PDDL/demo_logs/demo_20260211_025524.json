@@ -1,0 +1,117 @@
+{
+  "timestamp": "2026-02-11T02:55:24.134410",
+  "total_cycles": 4,
+  "total_replans": 3,
+  "total_actions_completed": 17,
+  "completed_actions": [
+    "pick(sugar)",
+    "place(sugar, cupboard_boundary_top)",
+    "pick(crackers)",
+    "place(crackers, cupboard_boundary_top)",
+    "pick(mug_cupboard)",
+    "place(mug_cupboard, placement_boundary)",
+    "pick(soup)",
+    "place(soup, cupboard_boundary)",
+    "pick(mustard)",
+    "place(mustard, cupboard_boundary)",
+    "pick(spam)",
+    "place(spam, cupboard_boundary)",
+    "pick(mug_box)",
+    "place(mug_box, placement_boundary)",
+    "open-lid(box_lid)",
+    "pick(mug_inside_box)",
+    "place(mug_inside_box, placement_boundary)"
+  ],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "plan": [
+        "pick(sugar)",
+        "place(sugar, cupboard_boundary_top)",
+        "pick(crackers)",
+        "place(crackers, cupboard_boundary_top)",
+        "pick(soup)",
+        "place(soup, cupboard_boundary)",
+        "pick(mustard)",
+        "place(mustard, cupboard_boundary)",
+        "pick(spam)",
+        "place(spam, cupboard_boundary)",
+        "open-lid(box_lid)",
+        "pick(mug_cupboard)",
+        "place(mug_cupboard, placement_boundary)",
+        "pick(mug_box)",
+        "place(mug_box, placement_boundary)"
+      ],
+      "failure_action": "pick(soup)",
+      "failure_reason": "BLOCKED: Cannot pick soup for cupboard_boundary - mug_cupboard is inside cupboard and must be moved first",
+      "replan_reason": null,
+      "completed_actions": [
+        "pick(sugar)",
+        "place(sugar, cupboard_boundary_top)",
+        "pick(crackers)",
+        "place(crackers, cupboard_boundary_top)"
+      ],
+      "success": false
+    },
+    {
+      "cycle_number": 2,
+      "plan": [
+        "pick(mug_cupboard)",
+        "place(mug_cupboard, placement_boundary)",
+        "pick(soup)",
+        "place(soup, cupboard_boundary)",
+        "pick(mustard)",
+        "place(mustard, cupboard_boundary)",
+        "pick(spam)",
+        "place(spam, cupboard_boundary)",
+        "open-lid(box_lid)"
+      ],
+      "failure_action": "open-lid(box_lid)",
+      "failure_reason": "BLOCKED: mug_box is on top of box_lid - must move it first",
+      "replan_reason": "mug_cupboard blocking cupboard_boundary",
+      "completed_actions": [
+        "pick(mug_cupboard)",
+        "place(mug_cupboard, placement_boundary)",
+        "pick(soup)",
+        "place(soup, cupboard_boundary)",
+        "pick(mustard)",
+        "place(mustard, cupboard_boundary)",
+        "pick(spam)",
+        "place(spam, cupboard_boundary)"
+      ],
+      "success": false
+    },
+    {
+      "cycle_number": 3,
+      "plan": [
+        "pick(mug_box)",
+        "place(mug_box, placement_boundary)",
+        "open-lid(box_lid)"
+      ],
+      "failure_action": null,
+      "failure_reason": null,
+      "replan_reason": "mug_box blocking box_lid",
+      "completed_actions": [
+        "pick(mug_box)",
+        "place(mug_box, placement_boundary)",
+        "open-lid(box_lid)"
+      ],
+      "success": true
+    },
+    {
+      "cycle_number": 4,
+      "plan": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "failure_action": null,
+      "failure_reason": null,
+      "replan_reason": "Discovered mug_inside_box (unknown until lid opened)",
+      "completed_actions": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "success": true
+    }
+  ]
+}

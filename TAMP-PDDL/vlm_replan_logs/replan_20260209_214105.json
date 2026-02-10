@@ -1,0 +1,59 @@
+{
+  "goal": "Keep all groceries in the cupboard and mugs on table",
+  "success": false,
+  "total_cycles": 4,
+  "total_replans": 3,
+  "total_actions_completed": 0,
+  "completed_actions": [],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "is_replan": false,
+      "plan": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mug_inside_box)",
+      "error_message": "No PDDL plan found",
+      "success": false
+    },
+    {
+      "cycle_number": 2,
+      "is_replan": true,
+      "plan": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mug_inside_box)",
+      "error_message": "No PDDL plan found",
+      "success": false
+    },
+    {
+      "cycle_number": 3,
+      "is_replan": true,
+      "plan": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mug_inside_box)",
+      "error_message": "No PDDL plan found",
+      "success": false
+    },
+    {
+      "cycle_number": 4,
+      "is_replan": true,
+      "plan": [
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, placement_boundary)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mug_inside_box)",
+      "error_message": "No PDDL plan found",
+      "success": false
+    }
+  ],
+  "failure_reason": "Max replans exceeded"
+}

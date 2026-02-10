@@ -1,0 +1,42 @@
+{
+  "start_time": "2026-02-09T06:35:04.135817",
+  "config": {
+    "use_mock_vlm": false,
+    "use_real_env": true,
+    "headless": false,
+    "max_replan_attempts": 3,
+    "save_logs": true,
+    "log_dir": "vlm_pipeline_logs",
+    "vlm_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "vlm_4bit": true
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "type": "initial",
+      "plan_result": {
+        "success": true,
+        "skeleton": [
+          "pick(mug_box)",
+          "place(mug_box, table)",
+          "open-lid(box_lid)"
+        ],
+        "inference_time": 66.77326822280884
+      },
+      "execution_result": {
+        "status": "success",
+        "completed": 3,
+        "total": 3,
+        "error": null
+      }
+    }
+  ],
+  "final_result": {
+    "goal": "Open the box lid",
+    "success": true,
+    "total_cycles": 1,
+    "final_status": "success",
+    "actions_completed": 3,
+    "actions_total": 3
+  }
+}

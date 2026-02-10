@@ -1,0 +1,25 @@
+{
+  "level": 0,
+  "level_name": "NONE",
+  "goal": "move all groceries to cupboard and move all mugs into box",
+  "timestamp": "2026-02-07T16:41:04.415874",
+  "text_only": true,
+  "system_prompt": "You are a robot task planner. You control a robot arm in a kitchen environment.\n\nYour job is to output a sequence of actions to achieve the given goal.\n\nAVAILABLE ACTIONS:\n1. pick(object) - Pick up an object\n2. place(object, region) - Place held object in a region\n3. open_lid(lid) - Open a lid/cover\n\nOUTPUT FORMAT:\nOutput ONLY a numbered list of actions:\n1. action(args)\n2. action(args)\n...\n\nDo NOT include explanations.",
+  "user_prompt": "=== SCENE STATE ===\n\n## Robot:\n- Gripper: empty\n\n## Objects:\n- mug_box: type=mug, location=box_top, relation=on_top_of(box_base)\n- mug_inside_box: type=mug, location=box_inside, relation=inside(box_base)\n- mug_table: type=mug, location=table\n- mug_cupboard: type=mug, location=cupboard_boundary\n- soup: type=can, location=table\n- mustard: type=bottle, location=table\n- spam: type=tin, location=table\n- sugar: type=box, location=table\n- crackers: type=cereal, location=table\n- box_lid: type=lid, location=box_base, state=closed, relation=covers(box_base)\n\n## Regions:\n- table: main workspace surface\n- box_top: top surface of the box\n- box_inside: interior of the box container\n- placement_boundary: target area for placing objects\n- cupboard_boundary: inside the cupboard shelf\n- groceries_boundary: groceries storage area\n\n## GOAL: move all groceries to cupboard and move all mugs into box\n\n## VISUAL CONTEXT:\nThe image shows 5 camera views of the scene.\n\nProvide the action sequence to achieve the goal.",
+  "state_text": "=== SCENE STATE ===\n\n## Robot:\n- Gripper: empty\n\n## Objects:\n- mug_box: type=mug, location=box_top, relation=on_top_of(box_base)\n- mug_inside_box: type=mug, location=box_inside, relation=inside(box_base)\n- mug_table: type=mug, location=table\n- mug_cupboard: type=mug, location=cupboard_boundary\n- soup: type=can, location=table\n- mustard: type=bottle, location=table\n- spam: type=tin, location=table\n- sugar: type=box, location=table\n- crackers: type=cereal, location=table\n- box_lid: type=lid, location=box_base, state=closed, relation=covers(box_base)\n\n## Regions:\n- table: main workspace surface\n- box_top: top surface of the box\n- box_inside: interior of the box container\n- placement_boundary: target area for placing objects\n- cupboard_boundary: inside the cupboard shelf\n- groceries_boundary: groceries storage area",
+  "vlm_output": "1. open_lid(box_lid)\n2. place(mug_box, cupboard_boundary)\n3. place(mug_inside_box, cupboard_boundary)\n4. place(mug_table, cupboard_boundary)\n5. place(mug_cupboard, cupboard_boundary)\n6. place(soup, cupboard_boundary)\n7. place(mustard, cupboard_boundary)\n8. place(spam, cupboard_boundary)\n9. place(sugar, cupboard_boundary)\n10. place(crackers, cupboard_boundary)",
+  "parsed_plan": [
+    "open-lid(box_lid)",
+    "place(mug_box, cupboard_boundary)",
+    "place(mug_inside_box, cupboard_boundary)",
+    "place(mug_table, cupboard_boundary)",
+    "place(mug_cupboard, cupboard_boundary)",
+    "place(soup, cupboard_boundary)",
+    "place(mustard, cupboard_boundary)",
+    "place(spam, cupboard_boundary)",
+    "place(sugar, cupboard_boundary)",
+    "place(crackers, cupboard_boundary)"
+  ],
+  "inference_time": 119.06172728538513,
+  "success": true
+}

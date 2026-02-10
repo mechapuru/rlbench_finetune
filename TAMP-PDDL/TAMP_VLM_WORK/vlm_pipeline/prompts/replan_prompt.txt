@@ -1,0 +1,34 @@
+=== REPLANNING REQUIRED ===
+
+## PREVIOUS PLAN:
+{PREVIOUS_PLAN}
+
+## EXECUTION STATUS:
+Actions completed: {COMPLETED_ACTIONS}
+Failed at action: {FAILED_ACTION}
+
+## FAILURE REASON:
+{FAILURE_REASON}
+
+## VISUAL CONTEXT:
+The attached image shows the CURRENT scene state.
+{UNKNOWN_OBJECT_INFO}
+
+## CURRENT STATE:
+{STATE_TEXT}
+
+## ORIGINAL GOAL:
+{GOAL_TEXT}
+
+## INSTRUCTIONS:
+The previous plan failed. Please analyze:
+1. What went wrong based on the failure reason
+2. The current visual scene showing any obstructions or changes
+3. What actions were already completed (don't repeat them)
+
+Provide a NEW action sequence that:
+- Starts from the current state (after completed actions)
+- Avoids the previous failure
+- Still achieves the original goal
+
+Output ONLY the new action sequence as a numbered list:

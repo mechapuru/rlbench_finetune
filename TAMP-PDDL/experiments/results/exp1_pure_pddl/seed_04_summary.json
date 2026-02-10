@@ -1,0 +1,82 @@
+{
+  "experiment": "exp1_pure_pddl",
+  "seed": 4,
+  "total_episodes": 1,
+  "successes": 1,
+  "failures": 0,
+  "success_rate": 1.0,
+  "ground_truth_matches": 1,
+  "ground_truth_match_rate": 1.0,
+  "avg_planning_time": 1.033695936203003,
+  "avg_plan_length": 14.0,
+  "ground_truth_sequence": [
+    "pick",
+    "place",
+    "open-lid",
+    "pick",
+    "place",
+    "pick",
+    "place"
+  ],
+  "episodes": [
+    {
+      "seed": 4,
+      "episode": 1,
+      "timestamp": "2026-01-30T00:35:43.098601",
+      "status": "SUCCESS",
+      "plan_full": [
+        "move",
+        "pick",
+        "move",
+        "place",
+        "move",
+        "move",
+        "move",
+        "open-lid",
+        "move",
+        "pick",
+        "place",
+        "move",
+        "pick",
+        "place"
+      ],
+      "plan_actions_only": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "plan_length": 14,
+      "planning_time_sec": 1.033695936203003,
+      "execution_time_sec": 228.44685983657837,
+      "total_time_sec": 229.48055577278137,
+      "failure_reason": "",
+      "ground_truth_comparison": {
+        "exact_match": true,
+        "count_match": true,
+        "similarity": 1.0,
+        "actual_sequence": [
+          "pick",
+          "place",
+          "open-lid",
+          "pick",
+          "place",
+          "pick",
+          "place"
+        ],
+        "expected_sequence": [
+          "pick",
+          "place",
+          "open-lid",
+          "pick",
+          "place",
+          "pick",
+          "place"
+        ]
+      }
+    }
+  ]
+}

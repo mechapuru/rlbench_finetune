@@ -1,0 +1,10 @@
+{
+  "goal": "Keep all groceries in cupboard and all mugs on table",
+  "success": false,
+  "total_cycles": 0,
+  "total_replans": 0,
+  "total_actions_completed": 0,
+  "completed_actions": [],
+  "cycles": [],
+  "failure_reason": "Initial planning failed"
+}

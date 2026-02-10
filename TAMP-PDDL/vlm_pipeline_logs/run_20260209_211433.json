@@ -1,0 +1,34 @@
+{
+  "start_time": "2026-02-09T21:14:14.572394",
+  "config": {
+    "use_mock_vlm": false,
+    "use_real_env": true,
+    "headless": false,
+    "max_replan_attempts": 3,
+    "save_logs": true,
+    "log_dir": "vlm_pipeline_logs",
+    "vlm_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "vlm_4bit": true
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "type": "initial",
+      "plan_result": {
+        "success": false,
+        "skeleton": [],
+        "inference_time": 18.851136684417725
+      },
+      "execution_result": null
+    }
+  ],
+  "final_result": {
+    "goal": "unknown",
+    "success": false,
+    "total_cycles": 1,
+    "final_status": "planning_failed",
+    "actions_completed": 0,
+    "actions_total": 0,
+    "error": "VLM planning failed - no valid plan generated"
+  }
+}

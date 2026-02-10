@@ -1,0 +1,186 @@
+; Ground Truth PDDL Action Sequence
+; Kitchen Long-Horizon Task
+
+; ============================================
+; TASK 1: Pick mug3 from cupboard -> placement_boundary
+; ============================================
+(move home hover_pick_mug3)
+(pick mug3 cupboard_boundary)
+(move hover_pick_mug3 hover_place_mug3)
+(place mug3 placement_boundary)
+(move hover_place_mug3 home)
+
+; ============================================
+; TASK 2: Pick 5 groceries from table -> cupboard
+; soup, mustard, spam -> cupboard_boundary (inside)
+; sugar, crackers -> cupboard_boundary_top (top shelf)
+; ============================================
+; Grocery 1 (soup -> inside)
+(move home hover_pick_grocery1)
+(pick soup table_boundary)
+(move hover_pick_grocery1 hover_place_grocery1)
+(place soup cupboard_boundary)
+(move hover_place_grocery1 home)
+
+; Grocery 2 (mustard -> inside)
+(move home hover_pick_grocery2)
+(pick mustard table_boundary)
+(move hover_pick_grocery2 hover_place_grocery2)
+(place mustard cupboard_boundary)
+(move hover_place_grocery2 home)
+
+; Grocery 3 (spam -> inside)
+(move home hover_pick_grocery3)
+(pick spam table_boundary)
+(move hover_pick_grocery3 hover_place_grocery3)
+(place spam cupboard_boundary)
+(move hover_place_grocery3 home)
+
+; Grocery 4 (sugar -> top)
+(move home hover_pick_grocery4)
+(pick sugar table_boundary)
+(move hover_pick_grocery4 hover_place_grocery4)
+(place sugar cupboard_boundary_top)
+(move hover_place_grocery4 home)
+
+; Grocery 5 (crackers -> top)
+(move home hover_pick_grocery5)
+(pick crackers table_boundary)
+(move hover_pick_grocery5 hover_place_grocery5)
+(place crackers cupboard_boundary_top)
+(move hover_place_grocery5 home)
+
+; ============================================
+; TASK 3: Pick mug2 from box_boundary -> placement_boundary
+; ============================================
+(move home hover_pick_mug2)
+(pick mug2 box_boundary)
+(move hover_pick_mug2 hover_place_mug2)
+(place mug2 placement_boundary)
+(move hover_place_mug2 home)
+
+; ============================================
+; TASK 4: Slide open box lid
+; ============================================
+(move home hover_grasp_lid)
+(grasp-lid box_lid)
+(slide-lid box_lid)
+(release-lid box_lid)
+(move hover_release_lid home)
+
+; ============================================
+; TASK 5: Pick mug4 from inside box -> placement_boundary
+; ============================================
+(move home hover_pick_mug4)
+(pick mug4 box_boundary)
+(move hover_pick_mug4 hover_place_mug4)
+(place mug4 placement_boundary)
+(move hover_place_mug4 home)
+
+; ============================================
+; SUMMARY
+; ============================================
+; Task 1: 5 actions (mug3 cupboard -> placement)
+; Task 2: 25 actions (5 groceries x 5 actions each)
+; Task 3: 5 actions (mug2 box -> placement)
+; Task 4: 5 actions (lid)
+; Task 5: 5 actions (mug4 box_inside -> placement)
+; TOTAL: 45 actions
+
+
+
+
+
+##THE ABOVE IS AFTER VLM --> PDDL EXTRACTION.
+
+
+##FROM VLM'S OUTPUT, THESE ARE ALL THE GT ACTION SEQUENCES, BEFORE EXTRACTION LAYER.
+
+; Ground Truth PDDL Action Sequence
+; Kitchen Long-Horizon Task
+
+; ============================================
+; TASK 1: Pick mug3 from cupboard -> placement_boundary
+; ============================================
+(move home hover_pick_mug3)
+(pick mug3 cupboard_boundary)
+(move hover_pick_mug3 hover_place_mug3)
+(place mug3 placement_boundary)
+(move hover_place_mug3 home)
+
+; ============================================
+; TASK 2: Pick 5 groceries from table -> cupboard
+; soup, mustard, spam -> cupboard_boundary (inside)
+; sugar, crackers -> cupboard_boundary_top (top shelf)
+; ============================================
+; Grocery 1 (soup -> inside)
+(move home hover_pick_grocery1)
+(pick soup table_boundary)
+(move hover_pick_grocery1 hover_place_grocery1)
+(place soup cupboard_boundary)
+(move hover_place_grocery1 home)
+
+; Grocery 2 (mustard -> inside)
+(move home hover_pick_grocery2)
+(pick mustard table_boundary)
+(move hover_pick_grocery2 hover_place_grocery2)
+(place mustard cupboard_boundary)
+(move hover_place_grocery2 home)
+
+; Grocery 3 (spam -> inside)
+(move home hover_pick_grocery3)
+(pick spam table_boundary)
+(move hover_pick_grocery3 hover_place_grocery3)
+(place spam cupboard_boundary)
+(move hover_place_grocery3 home)
+
+; Grocery 4 (sugar -> top)
+(move home hover_pick_grocery4)
+(pick sugar table_boundary)
+(move hover_pick_grocery4 hover_place_grocery4)
+(place sugar cupboard_boundary_top)
+(move hover_place_grocery4 home)
+
+; Grocery 5 (crackers -> top)
+(move home hover_pick_grocery5)
+(pick crackers table_boundary)
+(move hover_pick_grocery5 hover_place_grocery5)
+(place crackers cupboard_boundary_top)
+(move hover_place_grocery5 home)
+
+; ============================================
+; TASK 3: Pick mug2 from box_boundary -> placement_boundary
+; ============================================
+(move home hover_pick_mug2)
+(pick mug2 box_boundary)
+(move hover_pick_mug2 hover_place_mug2)
+(place mug2 placement_boundary)
+(move hover_place_mug2 home)
+
+; ============================================
+; TASK 4: Slide open box lid
+; ============================================
+(move home hover_grasp_lid)
+(grasp-lid box_lid)
+(slide-lid box_lid)
+(release-lid box_lid)
+(move hover_release_lid home)
+
+; ============================================
+; TASK 5: Pick mug4 from inside box -> placement_boundary
+; ============================================
+(move home hover_pick_mug4)
+(pick mug4 box_boundary)
+(move hover_pick_mug4 hover_place_mug4)
+(place mug4 placement_boundary)
+(move hover_place_mug4 home)
+
+; ============================================
+; SUMMARY
+; ============================================
+; Task 1: 5 actions (mug3 cupboard -> placement)
+; Task 2: 25 actions (5 groceries x 5 actions each)
+; Task 3: 5 actions (mug2 box -> placement)
+; Task 4: 5 actions (lid)
+; Task 5: 5 actions (mug4 box_inside -> placement)
+; TOTAL: 45 actions

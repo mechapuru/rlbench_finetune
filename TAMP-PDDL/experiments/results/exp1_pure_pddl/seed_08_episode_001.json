@@ -1,0 +1,59 @@
+{
+  "seed": 8,
+  "episode": 1,
+  "timestamp": "2026-01-30T08:55:07.947084",
+  "status": "SUCCESS",
+  "plan_full": [
+    "move",
+    "open-lid",
+    "move",
+    "pick",
+    "move",
+    "move",
+    "place",
+    "move",
+    "move",
+    "pick",
+    "place",
+    "move",
+    "pick",
+    "place"
+  ],
+  "plan_actions_only": [
+    "open-lid",
+    "pick",
+    "place",
+    "pick",
+    "place",
+    "pick",
+    "place"
+  ],
+  "plan_length": 14,
+  "planning_time_sec": 1.261359453201294,
+  "execution_time_sec": 228.77445363998413,
+  "total_time_sec": 230.03581309318542,
+  "failure_reason": "",
+  "ground_truth_comparison": {
+    "exact_match": false,
+    "count_match": true,
+    "similarity": 0.5714285714285714,
+    "actual_sequence": [
+      "open-lid",
+      "pick",
+      "place",
+      "pick",
+      "place",
+      "pick",
+      "place"
+    ],
+    "expected_sequence": [
+      "pick",
+      "place",
+      "open-lid",
+      "pick",
+      "place",
+      "pick",
+      "place"
+    ]
+  }
+}

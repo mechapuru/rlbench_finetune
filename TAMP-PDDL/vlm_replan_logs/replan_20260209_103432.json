@@ -1,0 +1,38 @@
+{
+  "goal": "Keep all groceries in cupboard and all mugs on table",
+  "success": true,
+  "total_cycles": 1,
+  "total_replans": 0,
+  "total_actions_completed": 5,
+  "completed_actions": [
+    "pick(mug_box)",
+    "place(mug_box, table)",
+    "open-lid(box_lid)",
+    "pick(mug_inside_box)",
+    "place(mug_inside_box, table)"
+  ],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "is_replan": false,
+      "plan": [
+        "pick(mug_box)",
+        "place(mug_box, table)",
+        "open-lid(box_lid)",
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, table)"
+      ],
+      "completed_actions": [
+        "pick(mug_box)",
+        "place(mug_box, table)",
+        "open-lid(box_lid)",
+        "pick(mug_inside_box)",
+        "place(mug_inside_box, table)"
+      ],
+      "failed_action": null,
+      "error_message": null,
+      "success": true
+    }
+  ],
+  "failure_reason": null
+}

@@ -1,0 +1,16 @@
+{
+  "seed": 2,
+  "episode": 1,
+  "timestamp": "2026-01-30T10:21:38.294823",
+  "status": "FAILURE",
+  "plan_full": [],
+  "plan_actions_only": [],
+  "plan_length": 0,
+  "planning_time_sec": 1.218425989151001,
+  "execution_time_sec": 0,
+  "total_time_sec": 1.218425989151001,
+  "failure_reason": "No plan after COAST replanning",
+  "constraints_used": 1,
+  "replanning_cycles": 5,
+  "ground_truth_comparison": null
+}

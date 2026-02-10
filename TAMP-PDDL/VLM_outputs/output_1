@@ -1,0 +1,97 @@
+(.venv) naren@pop-os:~/iiith/Long_Horizon/TAMP-PDDL$ python -m vlm_pipeline.vlm_main --no-env --goal "Keep groceries in cupboard and mugs inside box"
+[Pipeline] Using real VLM: Qwen/Qwen2-VL-7B-Instruct
+
+============================================================
+VLM PIPELINE INITIALIZATION
+============================================================
+Loading VLM: Qwen/Qwen2-VL-7B-Instruct
+Using 4-bit quantization: True
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`.
+Configuring 4-bit quantization...
+Fetching 5 files: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 61141.46it/s]
+Download complete: : 0.00B [00:00, ?B/s]                                                          | 0/5 [00:00<?, ?it/s]
+Loading weights:  21%|▏| 154/730 [00:02<00:09, 58.34it/s, Materializing param=model.language_model.layers.12.self_attn.o
+4-bit quantization failed: CUDA out of memory. Tried to allocate 26.00 MiB. GPU 0 has a total capacity of 7.53 GiB of which 18.69 MiB is free. Including non-PyTorch memory, this process has 7.50 GiB memory in use. Of the allocated memory 7.35 GiB is allocated by PyTorch, and 31.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Cleaning up memory and falling back to float16...
+Loading with float16 precision...
+Fetching 5 files: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 31679.03it/s]
+Download complete: : 0.00B [00:00, ?B/s]                                                          | 0/5 [00:00<?, ?it/s]
+Loading weights: 100%|██████| 730/730 [00:10<00:00, 69.80it/s, Materializing param=model.visual.patch_embed.proj.weight]
+Some parameters are on the meta device because they were offloaded to the cpu.
+VLM loaded successfully!
+[Pipeline] Initialization complete!
+
+============================================================
+VLM PIPELINE RUN
+============================================================
+Goal: Keep groceries in cupboard and mugs inside box
+
+[Pipeline] Planning for goal: Keep groceries in cupboard and mugs inside box
+[Pipeline] Prompt bundle created.
+[Pipeline] Running in offline mode (dummy images).
+[VLM Planner] Input text length: 2056
+[VLM Planner] Input text preview: <|im_start|>system
+You are a robot task planner for a kitchen manipulation task. You control a Panda robot arm.
+
+Your job is to output a sequence of actions to achieve the given goal. You MUST use ONL...
+[VLM Planner] Input tensors on device: cuda:0, shape: torch.Size([1, 2846])
+[VLM Planner] Starting generation...
+[VLM Planner] Generation complete.
+[VLM Planner] Raw output: 1. open-lid(box_lid)
+2. pick(mug_inside_box)
+3. place(mug_inside_box, placement_boundary)
+4. pick(soup)
+5. place(soup, cupboard_boundary)
+[Pipeline] VLM inference time: 81.38s
+[Pipeline] Raw output:
+1. open-lid(box_lid)
+2. pick(mug_inside_box)
+3. place(mug_inside_box, placement_boundary)
+4. pick(soup)
+5. place(soup, cupboard_boundary)
+[Pipeline] Parsed 5 actions:
+  1. open-lid(box_lid)
+  2. pick(mug_inside_box)
+  3. place(mug_inside_box, placement_boundary)
+  4. pick(soup)
+  5. place(soup, cupboard_boundary)
+[Pipeline] WARNING: Plan validation errors:
+  - Step 1: Cannot open lid - mug_box is still on top
+
+[Pipeline] Executing plan with 5 actions
+
+[Executor] Starting plan execution (5 actions)
+[Executor] Plan: ['open-lid(box_lid)', 'pick(mug_inside_box)', 'place(mug_inside_box, placement_boundary)', 'pick(soup)', 'place(soup, cupboard_boundary)']
+
+[Executor] Action 1/5: open-lid(box_lid)
+  [Executor] Executing: open-lid(box_lid)
+[Executor] Action failed: 'NoneType' object has no attribute 'get_object'
+
+[Pipeline] REPLANNING (attempt 1)
+[Pipeline] Reason: Open-lid failed for box_lid: 'NoneType' object has no attribute 'get_object'
+[Pipeline] Completed actions: []
+[VLM Planner] Input text length: 2056
+[VLM Planner] Input text preview: <|im_start|>system
+You are a robot task planner for a kitchen manipulation task. You control a Panda robot arm.
+
+Your job is to output a sequence of actions to achieve the given goal. You MUST use ONL...
+[VLM Planner] Input tensors on device: cuda:0, shape: torch.Size([1, 2846])
+[VLM Planner] Starting generation...
+[Pipeline] Planning failed!
+[Pipeline] Log saved to: vlm_pipeline_logs/run_20260207_124445.json
+
+============================================================
+FINAL RESULT
+============================================================
+{
+  "goal": "Keep groceries in cupboard and mugs inside box",
+  "success": false,
+  "total_cycles": 2,
+  "final_status": "ik_failure",
+  "actions_completed": 0,
+  "actions_total": 5
+}
+
+[Pipeline] Shutting down...
+[Pipeline] Shutdown complete

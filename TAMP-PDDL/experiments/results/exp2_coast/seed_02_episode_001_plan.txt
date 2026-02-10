@@ -1,0 +1,22 @@
+Experiment: exp2_coast
+Seed: 2
+Episode: 1
+Constraints Used: 1
+Replanning Cycles: 5
+==================================================
+
+GROUND TRUTH:
+  1. pick
+  2. place
+  3. open-lid
+  4. pick
+  5. place
+  6. pick
+  7. place
+
+GENERATED PLAN (full):
+  No plan found
+
+GENERATED PLAN (actions only, no move/retreat):
+
+MATCH: False

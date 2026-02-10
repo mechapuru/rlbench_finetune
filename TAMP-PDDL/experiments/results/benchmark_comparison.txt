@@ -1,0 +1,43 @@
+================================================================================
+BENCHMARK COMPARISON REPORT: PDDLStream vs COAST
+================================================================================
+
+Ground Truth Action Sequence: pick -> place -> open-lid -> pick -> place -> pick -> place
+
+Metric                                   Exp1 (Pure)        Exp2 (COAST)      
+--------------------------------------------------------------------------------
+Seeds Run                                11                 3                 
+Total Episodes                           11                 3                 
+Successes                                10                 0                 
+Failures                                 1                  3                 
+Success Rate                             0.909              0.000             
+Ground Truth Matches                     3                  0                 
+GT Match Rate                            0.273              0.000             
+Avg Planning Time (s)                    1.215              1.211             
+Std Planning Time (s)                    0.133              0.046             
+Avg Plan Length                          14.000             0                 
+
+--------------------------------------------------------------------------------
+COAST-Specific Metrics:
+  Avg Constraints Used: 0.67
+  Avg Replanning Cycles: 3.67
+
+================================================================================
+
+PER-SEED BREAKDOWN:
+--------------------------------------------------------------------------------
+Seed     Exp1 Status     Exp1 GT Match   Exp2 Status     Exp2 GT Match  
+--------------------------------------------------------------------------------
+0        1/1             0/1             0/1             0/1            
+1        1/1             1/1             0/1             0/1            
+2        1/1             0/1             0/1             0/1            
+3        1/1             1/1             N/A             N/A            
+4        1/1             1/1             N/A             N/A            
+5        1/1             0/1             N/A             N/A            
+6        1/1             0/1             N/A             N/A            
+7        1/1             0/1             N/A             N/A            
+8        1/1             0/1             N/A             N/A            
+9        1/1             0/1             N/A             N/A            
+20       0/1             0/1             N/A             N/A            
+
+================================================================================

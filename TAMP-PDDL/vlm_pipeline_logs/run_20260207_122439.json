@@ -1,0 +1,33 @@
+{
+  "start_time": "2026-02-07T12:24:38.936048",
+  "config": {
+    "use_mock_vlm": false,
+    "use_real_env": false,
+    "headless": false,
+    "max_replan_attempts": 3,
+    "save_logs": true,
+    "log_dir": "vlm_pipeline_logs",
+    "vlm_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "vlm_4bit": true
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "type": "initial",
+      "plan_result": {
+        "success": false,
+        "skeleton": [],
+        "inference_time": 0.33455586433410645
+      },
+      "execution_result": null
+    }
+  ],
+  "final_result": {
+    "goal": "Keep groceries in cupboard and mugs inside box",
+    "success": false,
+    "total_cycles": 1,
+    "final_status": "failed",
+    "actions_completed": 0,
+    "actions_total": 0
+  }
+}

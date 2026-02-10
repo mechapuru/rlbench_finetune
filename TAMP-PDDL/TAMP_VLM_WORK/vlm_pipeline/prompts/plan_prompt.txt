@@ -1,0 +1,35 @@
+{STATE_TEXT}
+
+## GOAL:
+{GOAL_TEXT}
+
+## VISUAL CONTEXT:
+The attached image shows 5 camera views of the kitchen scene:
+- Top row: left shoulder view, right shoulder view, overhead view
+- Bottom row: wrist camera (end-effector), front view
+
+Use the visual information along with the state description to understand object positions and plan the correct action sequence.
+
+## KNOWN OBJECTS:
+- mug_box: mug currently on top of the box lid
+- mug_inside_box: mug inside the closed box (blocked until lid opens)
+- soup: can on the table
+- box_lid: the sliding lid of the box
+
+## KNOWN REGIONS:
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf  
+- table: main table surface
+- box-top: top surface of the box
+
+## EXAMPLE PLAN (for reference):
+For goal "Move mug_box to placement, open box, move mug_inside_box to placement, move soup to cupboard":
+1. pick(mug_box)
+2. place(mug_box, placement_boundary)
+3. open-lid(box_lid)
+4. pick(mug_inside_box)
+5. place(mug_inside_box, placement_boundary)
+6. pick(soup)
+7. place(soup, cupboard_boundary)
+
+Now output YOUR action sequence for the given goal:

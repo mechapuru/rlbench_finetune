@@ -1,0 +1,1016 @@
+{
+  "ground_truth": [
+    "pick",
+    "place",
+    "open-lid",
+    "pick",
+    "place",
+    "pick",
+    "place"
+  ],
+  "exp1_pure_pddl": {
+    "num_seeds": 11,
+    "total_episodes": 11,
+    "total_successes": 10,
+    "total_failures": 1,
+    "success_rate": 0.9090909090909091,
+    "ground_truth_matches": 3,
+    "ground_truth_match_rate": 0.2727272727272727,
+    "avg_planning_time": 1.2149729945442893,
+    "std_planning_time": 0.13284194398657667,
+    "avg_plan_length": 14.0
+  },
+  "exp2_coast": {
+    "num_seeds": 3,
+    "total_episodes": 3,
+    "total_successes": 0,
+    "total_failures": 3,
+    "success_rate": 0.0,
+    "ground_truth_matches": 0,
+    "ground_truth_match_rate": 0.0,
+    "avg_planning_time": 1.2114508946736653,
+    "std_planning_time": 0.04576966708556125,
+    "avg_plan_length": 0
+  },
+  "exp1_per_seed": [
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 0,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.3064308166503906,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 0,
+          "episode": 1,
+          "timestamp": "2026-01-29T18:03:20.806841",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "place",
+            "move",
+            "move",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "open-lid"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "open-lid"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.3064308166503906,
+          "execution_time_sec": 242.18812656402588,
+          "total_time_sec": 243.49455738067627,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.2857142857142857,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "open-lid"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 1,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 1,
+      "ground_truth_match_rate": 1.0,
+      "avg_planning_time": 1.2318394184112549,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 1,
+          "episode": 1,
+          "timestamp": "2026-01-29T18:14:06.041769",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "place",
+            "move",
+            "move",
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.2318394184112549,
+          "execution_time_sec": 269.7064001560211,
+          "total_time_sec": 270.9382395744324,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": true,
+            "count_match": true,
+            "similarity": 1.0,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 2,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.1789803504943848,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 2,
+          "episode": 1,
+          "timestamp": "2026-01-29T21:39:21.886410",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.1789803504943848,
+          "execution_time_sec": 696.462954044342,
+          "total_time_sec": 697.6419343948364,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.5714285714285714,
+            "actual_sequence": [
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 3,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 1,
+      "ground_truth_match_rate": 1.0,
+      "avg_planning_time": 1.3958187103271484,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 3,
+          "episode": 1,
+          "timestamp": "2026-01-29T23:08:38.353540",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "place",
+            "move",
+            "move",
+            "open-lid",
+            "move",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.3958187103271484,
+          "execution_time_sec": 5324.286948442459,
+          "total_time_sec": 5325.682767152786,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": true,
+            "count_match": true,
+            "similarity": 1.0,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 4,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 1,
+      "ground_truth_match_rate": 1.0,
+      "avg_planning_time": 1.033695936203003,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 4,
+          "episode": 1,
+          "timestamp": "2026-01-30T00:35:43.098601",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "place",
+            "move",
+            "move",
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.033695936203003,
+          "execution_time_sec": 228.44685983657837,
+          "total_time_sec": 229.48055577278137,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": true,
+            "count_match": true,
+            "similarity": 1.0,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 5,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.067688226699829,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 5,
+          "episode": 1,
+          "timestamp": "2026-01-30T00:52:26.491357",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "pick",
+            "place",
+            "move",
+            "open-lid"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "open-lid"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.067688226699829,
+          "execution_time_sec": 256.98951745033264,
+          "total_time_sec": 258.05720567703247,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.2857142857142857,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "open-lid"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 6,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.1853742599487305,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 6,
+          "episode": 1,
+          "timestamp": "2026-01-30T08:45:12.413813",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "move",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "open-lid",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.1853742599487305,
+          "execution_time_sec": 567.7581255435944,
+          "total_time_sec": 568.9434998035431,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.5714285714285714,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 7,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.1572082042694092,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 7,
+          "episode": 1,
+          "timestamp": "2026-01-30T08:51:06.296131",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "pick",
+            "move",
+            "place",
+            "move",
+            "move",
+            "pick",
+            "move",
+            "place",
+            "open-lid"
+          ],
+          "plan_actions_only": [
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "open-lid"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.1572082042694092,
+          "execution_time_sec": 336.6411175727844,
+          "total_time_sec": 337.79832577705383,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.2857142857142857,
+            "actual_sequence": [
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "open-lid"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 8,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.261359453201294,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 8,
+          "episode": 1,
+          "timestamp": "2026-01-30T08:55:07.947084",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "move",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.261359453201294,
+          "execution_time_sec": 228.77445363998413,
+          "total_time_sec": 230.03581309318542,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.5714285714285714,
+            "actual_sequence": [
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 9,
+      "total_episodes": 1,
+      "successes": 1,
+      "failures": 0,
+      "success_rate": 1.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.4778223037719727,
+      "avg_plan_length": 14.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 9,
+          "episode": 1,
+          "timestamp": "2026-01-30T09:01:02.580282",
+          "status": "SUCCESS",
+          "plan_full": [
+            "move",
+            "open-lid",
+            "move",
+            "pick",
+            "move",
+            "move",
+            "place",
+            "move",
+            "move",
+            "pick",
+            "place",
+            "move",
+            "pick",
+            "place"
+          ],
+          "plan_actions_only": [
+            "open-lid",
+            "pick",
+            "place",
+            "pick",
+            "place",
+            "pick",
+            "place"
+          ],
+          "plan_length": 14,
+          "planning_time_sec": 1.4778223037719727,
+          "execution_time_sec": 234.4460096359253,
+          "total_time_sec": 235.92383193969727,
+          "failure_reason": "",
+          "ground_truth_comparison": {
+            "exact_match": false,
+            "count_match": true,
+            "similarity": 0.5714285714285714,
+            "actual_sequence": [
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ],
+            "expected_sequence": [
+              "pick",
+              "place",
+              "open-lid",
+              "pick",
+              "place",
+              "pick",
+              "place"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "experiment": "exp1_pure_pddl",
+      "seed": 20,
+      "total_episodes": 1,
+      "successes": 0,
+      "failures": 1,
+      "success_rate": 0.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.0684852600097656,
+      "avg_plan_length": NaN,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 20,
+          "episode": 1,
+          "timestamp": "2026-01-30T09:23:22.405945",
+          "status": "FAILURE",
+          "plan_full": [],
+          "plan_actions_only": [],
+          "plan_length": 0,
+          "planning_time_sec": 1.0684852600097656,
+          "execution_time_sec": 0,
+          "total_time_sec": 1.0684852600097656,
+          "failure_reason": "No plan found",
+          "ground_truth_comparison": null
+        }
+      ]
+    }
+  ],
+  "exp2_per_seed": [
+    {
+      "experiment": "exp2_coast",
+      "seed": 0,
+      "total_episodes": 1,
+      "successes": 0,
+      "failures": 1,
+      "success_rate": 0.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.152233600616455,
+      "avg_constraints": 0.0,
+      "avg_replanning": 1.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 0,
+          "episode": 1,
+          "timestamp": "2026-01-30T09:35:25.928524",
+          "status": "FAILURE",
+          "plan_full": [],
+          "plan_actions_only": [],
+          "plan_length": 0,
+          "planning_time_sec": 1.152233600616455,
+          "execution_time_sec": 0,
+          "total_time_sec": 1.152233600616455,
+          "failure_reason": "No plan after COAST replanning",
+          "constraints_used": 0,
+          "replanning_cycles": 1,
+          "ground_truth_comparison": null
+        }
+      ]
+    },
+    {
+      "experiment": "exp2_coast",
+      "seed": 1,
+      "total_episodes": 1,
+      "successes": 0,
+      "failures": 1,
+      "success_rate": 0.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.26369309425354,
+      "avg_constraints": 1.0,
+      "avg_replanning": 5.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 1,
+          "episode": 1,
+          "timestamp": "2026-01-30T09:38:40.549264",
+          "status": "FAILURE",
+          "plan_full": [],
+          "plan_actions_only": [],
+          "plan_length": 0,
+          "planning_time_sec": 1.26369309425354,
+          "execution_time_sec": 0,
+          "total_time_sec": 1.26369309425354,
+          "failure_reason": "No plan after COAST replanning",
+          "constraints_used": 1,
+          "replanning_cycles": 5,
+          "ground_truth_comparison": null
+        }
+      ]
+    },
+    {
+      "experiment": "exp2_coast",
+      "seed": 2,
+      "total_episodes": 1,
+      "successes": 0,
+      "failures": 1,
+      "success_rate": 0.0,
+      "ground_truth_matches": 0,
+      "ground_truth_match_rate": 0.0,
+      "avg_planning_time": 1.218425989151001,
+      "avg_constraints": 1.0,
+      "avg_replanning": 5.0,
+      "ground_truth_sequence": [
+        "pick",
+        "place",
+        "open-lid",
+        "pick",
+        "place",
+        "pick",
+        "place"
+      ],
+      "episodes": [
+        {
+          "seed": 2,
+          "episode": 1,
+          "timestamp": "2026-01-30T10:21:38.294823",
+          "status": "FAILURE",
+          "plan_full": [],
+          "plan_actions_only": [],
+          "plan_length": 0,
+          "planning_time_sec": 1.218425989151001,
+          "execution_time_sec": 0,
+          "total_time_sec": 1.218425989151001,
+          "failure_reason": "No plan after COAST replanning",
+          "constraints_used": 1,
+          "replanning_cycles": 5,
+          "ground_truth_comparison": null
+        }
+      ]
+    }
+  ]
+}

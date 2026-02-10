@@ -1,0 +1,75 @@
+LEVEL 2 (FULL)
+============================================================
+
+GOAL: move all groceries to cupboard and move all mugs into box
+
+--- SYSTEM PROMPT ---
+You are a robot task planner. You control a robot arm in a kitchen environment.
+
+Your job is to output a sequence of actions to achieve the given goal.
+
+AVAILABLE ACTIONS:
+1. pick(object) - Pick up an object
+2. place(object, region) - Place held object in a region
+3. open_lid(lid) - Open a lid/cover
+
+OUTPUT FORMAT:
+Output ONLY a numbered list of actions:
+1. action(args)
+2. action(args)
+...
+
+Do NOT include explanations.
+
+CRITICAL SPATIAL CONSTRAINTS (You MUST follow these):
+- If object A is ON TOP OF container B, then B's lid/cover CANNOT be operated until A is REMOVED FIRST.
+- If a container is CLOSED, then objects INSIDE are NOT accessible until the lid is opened.
+- Any object marked "NOT_ACCESSIBLE" or "BLOCKED_BY=X" CANNOT be manipulated until the blocking object X is moved away.
+- You MUST respect the BLOCKED_BY relationships shown in the state.
+
+ACTION PRECONDITIONS (MUST be satisfied for each action):
+- pick(X): Gripper MUST be empty. X MUST be accessible (not blocked). You CANNOT place without picking first.
+- place(X, R): You MUST be holding X (must have picked it). You CANNOT place something you haven't picked.
+- open_lid(L): L MUST be accessible (not blocked by objects on top). Remove blocking objects FIRST.
+
+CRITICAL: Every place(X, R) MUST be preceded by pick(X). No exceptions.
+
+--- USER PROMPT ---
+=== SCENE STATE ===
+
+## Robot:
+- Gripper: empty
+
+## Objects:
+- mug_box: type=mug, location=box_top, relation=on_top_of(box_base)
+- mug_inside_box: type=mug, location=box_inside, relation=inside(box_base), BLOCKED_BY=box_lid, NOT_ACCESSIBLE
+- mug_table: type=mug, location=table
+- mug_cupboard: type=mug, location=cupboard_boundary
+- soup: type=can, location=table
+- mustard: type=bottle, location=table
+- spam: type=tin, location=table
+- sugar: type=box, location=table
+- crackers: type=cereal, location=table
+- box_lid: type=lid, location=box_base, state=closed, relation=covers(box_base), BLOCKED_BY=mug_box, NOT_ACCESSIBLE
+
+## Regions:
+- table: main workspace surface
+- box_top: top surface of the box
+- box_inside: interior of the box container
+- placement_boundary: target area for placing objects
+- cupboard_boundary: inside the cupboard shelf
+- groceries_boundary: groceries storage area
+
+## GOAL: move all groceries to cupboard and move all mugs into box
+
+## VISUAL CONTEXT:
+The image shows 5 camera views of the scene.
+
+Provide the action sequence to achieve the goal.
+
+--- VLM OUTPUT ---
+
+
+--- PARSED PLAN ---
+
+Inference time: 5.7s

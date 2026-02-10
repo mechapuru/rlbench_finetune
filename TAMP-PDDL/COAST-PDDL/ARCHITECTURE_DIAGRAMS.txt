@@ -1,0 +1,448 @@
+================================================================================
+                    VIZ-COAST & REPOSITORY ARCHITECTURE
+                           Visual Overview
+================================================================================
+
+1. PAPER CONCEPT (VIZ-COAST)
+================================================================================
+
+    Scene Image + Domain Description
+              |
+              v
+    +------------------+
+    | Vision-Language  |  (GPT-4V, Claude, etc.)
+    | Model (VLM)      |
+    +------------------+
+              |
+              | Extracts spatial constraints
+              | (e.g., "plate must be clear before placing food")
+              v
+    +------------------+
+    | Augmented PDDL   |
+    | Domain           |
+    +------------------+
+              |
+              v
+    +------------------+
+    | COAST TAMP       |  ← Collaborator's repo implements this part
+    | Algorithm        |
+    +------------------+
+              |
+              v
+    Feasible Plan (Fewer Failures, Faster Planning)
+
+
+2. REPOSITORY ARCHITECTURE (integration_dir)
+================================================================================
+
+    CLI Entry Point (run.py)
+            |
+            v
+    +---------------------------------------+
+    |          Configuration                |
+    |          (config.py)                  |
+    | • Task → PDDL mapping                 |
+    | • Planner settings                    |
+    | • Paths, timeouts, etc.              |
+    +---------------------------------------+
+            |
+            v
+    +---------------------------------------+
+    |      RLBenchWorld (world.py)         |
+    | • Simulation interface                |
+    | • Robot control                       |
+    | • Object pose queries                 |
+    | • Motion planning                     |
+    +---------------------------------------+
+            |
+            +-------------------+
+            |                   |
+            v                   v
+    +---------------+    +---------------+
+    |   Streams     |    |   Actions     |
+    | (streams.py)  |    | (actions.py)  |
+    |               |    |               |
+    | • SampleGrasp |    | • Pick        |
+    | • SamplePose  |    | • Place       |
+    | • SampleIK    |    | • OpenLid     |
+    | • SampleMotion|    | • CloseLid    |
+    +---------------+    +---------------+
+            |                   |
+            +-------------------+
+                    |
+                    v
+    +---------------------------------------+
+    |         Task Planner                  |
+    |         (planners/)                   |
+    |                                       |
+    | +--------------+  +--------------+    |
+    | | Fast         |  | LLM          |    |
+    | | Downward     |  | Planner      |    |
+    | +--------------+  +--------------+    |
+    |                                       |
+    | Pluggable via TaskPlanner interface   |
+    +---------------------------------------+
+                    |
+                    v
+    +---------------------------------------+
+    |         COAST Algorithm               |
+    | • Task planning (symbolic)            |
+    | • Stream sampling (geometric)         |
+    | • Constraint checking                 |
+    | • Incremental refinement              |
+    +---------------------------------------+
+                    |
+                    v
+                Plan Output
+                    |
+                    v
+    +---------------------------------------+
+    |         Plan Execution                |
+    | • Step through actions                |
+    | • Execute trajectories                |
+    | • Monitor success                     |
+    +---------------------------------------+
+
+
+3. DATA FLOW
+================================================================================
+
+    PLANNING PHASE:
+    
+    Initial State (PDDL)
+            |
+            v
+    Task Planner (symbolic search)
+            |
+            | Needs geometric info?
+            v
+    Stream Sampling (geometric)
+            |
+            | • SampleGrasp → grasp poses
+            | • SamplePose → placement poses
+            | • SampleIK → configurations
+            | • SampleMotion → trajectories
+            |
+            v
+    Constraint Checking
+            |
+            | Feasible?
+            v
+    Task Plan (symbolic actions + geometric parameters)
+    
+    
+    EXECUTION PHASE:
+    
+    Task Plan
+            |
+            v
+    For each action in plan:
+            |
+            v
+    Action.execute(inputs, outputs)
+            |
+            | • Extract geometric parameters
+            | • Execute in simulation
+            | • Monitor success
+            v
+    Next action
+            |
+            v
+    Goal achieved!
+
+
+4. PDDL + PYTHON INTEGRATION
+================================================================================
+
+    PDDL Side (Symbolic)              Python Side (Geometric)
+    
+    domain.pddl                       world.py
+    ├── predicates                    └── RLBenchWorld class
+    │   ├── (AtConf ?q)                  ├── get_robot_config()
+    │   ├── (AtPose ?o ?p)               ├── plan_to_pose()
+    │   └── (Holding ?o)                 └── ...
+    │
+    ├── actions                       actions.py
+    │   ├── pick(?o ?p ?g ?q ?t)     └── Pick class
+    │   └── place(?o ?p ?g ?q ?t)         ├── execute()
+    │                                      └── ...
+    │
+    problem.pddl                      streams.py
+    ├── init                          ├── SampleGrasp class
+    │   ├── (AtConf q0)              │   └── sample()
+    │   └── (AtPose chicken p0)      ├── SamplePose class
+    ├── goal                          │   └── sample()
+    │   └── (At chicken plate)       └── ...
+    │
+    streams.pddl                      
+    ├── sample-grasp                  streams.py
+    │   inputs: ?o                    └── SampleGrasp.sample()
+    │   outputs: ?g                       └── returns GraspPose
+    │
+    └── sample-motion                 streams.py
+        inputs: ?q1 ?q2               └── SampleMotion.sample()
+        outputs: ?t                       └── returns Trajectory
+
+
+5. COMPONENT INTERACTION DIAGRAM
+================================================================================
+
+    +----------------+
+    |    run.py      |  ← Entry point
+    +----------------+
+           |
+           | Creates
+           v
+    +----------------+      +------------------+
+    |  CoastConfig   |----->| TASK_PDDL_FOLDERS|
+    +----------------+      +------------------+
+           |
+           | Initializes
+           v
+    +----------------+      +------------------+
+    | RLBenchWorld   |<---->|   RLBench/PyRep  |
+    +----------------+      +------------------+
+           |
+           | Passed to
+           |
+    +------+------+
+    |             |
+    v             v
++--------+    +--------+
+|Streams |    |Actions |
++--------+    +--------+
+    |             |
+    | Registered with
+    |             |
+    +------+------+
+           |
+           v
+    +----------------+
+    |  COAST Plan    |  ← Planning happens here
+    +----------------+
+           |
+           | Returns
+           v
+    +----------------+
+    |   Plan         |
+    |   (actions +   |
+    |    parameters) |
+    +----------------+
+           |
+           | Execute
+           v
+    +----------------+
+    | Simulation     |
+    +----------------+
+
+
+6. CLASS HIERARCHY
+================================================================================
+
+    Stream (Abstract Base Class)
+      ├── SampleGrasp
+      ├── SamplePose
+      ├── SampleIK
+      ├── SampleMotion
+      └── CheckCollision
+    
+    Action (Abstract Base Class)
+      ├── Pick
+      ├── Place
+      ├── PlaceOnGrill
+      ├── OpenLid
+      ├── CloseLid
+      └── Cook
+    
+    TaskPlanner (Abstract Base Class)
+      ├── FastDownwardPlanner
+      └── LLMPlanner
+    
+    Data Classes:
+      ├── GraspPose
+      ├── PlacementPose
+      ├── Trajectory
+      ├── ObjectInfo
+      └── CoastConfig
+
+
+7. COMPARISON: YOUR CODE vs. COLLABORATOR'S
+================================================================================
+
+    YOUR CODE:                      COLLABORATOR'S CODE:
+    
+    Global ENV                  →   World instance (no globals)
+           ↓                               ↓
+    Function-based streams      →   Class-based streams
+           ↓                               ↓
+    Inline action execution     →   Encapsulated actions
+           ↓                               ↓
+    Multiple scripts            →   Unified run.py
+           ↓                               ↓
+    Hard-coded paths            →   Config management
+           ↓                               ↓
+    Direct planner calls        →   Pluggable planners
+
+
+8. INTEGRATION STRATEGIES
+================================================================================
+
+    OPTION 1: GRADUAL ADOPTION
+    
+    Your Code                   Collaborator's Patterns
+        |                              |
+        |  Week 1: World interface    |
+        |<-----------------------------|
+        |                              |
+        |  Week 2: Stream classes     |
+        |<-----------------------------|
+        |                              |
+        |  Week 3: Action classes     |
+        |<-----------------------------|
+        |                              |
+        |  Week 4: Config + CLI       |
+        |<-----------------------------|
+        |                              |
+        v                              v
+    Improved Architecture
+    
+    
+    OPTION 2: SIDE-BY-SIDE
+    
+    Your Code          Collaborator's Code
+        |                     |
+        v                     v
+    Experimental         Production
+    Scripts              Framework
+        |                     |
+        +---------------------+
+                  |
+                  v
+         Best of Both Worlds
+    
+    
+    OPTION 3: FULL MIGRATION
+    
+    Your Code
+        |
+        | Full refactor
+        v
+    Collaborator's Architecture
+        |
+        | Add your tasks
+        v
+    Unified System
+
+
+9. FILE ORGANIZATION COMPARISON
+================================================================================
+
+    YOUR TAMP-PDDL/:                    COLLABORATOR'S integration_dir/:
+    
+    ├── baseline_0.py               ├── run.py (unified entry)
+    ├── baseline_1.py               ├── world.py (clean interface)
+    ├── orchestrator.py             ├── streams.py (OOP)
+    ├── rlbench_kitchen_env.py      ├── actions.py (OOP)
+    ├── rlbench_kitchen_streams.py  ├── config.py (centralized)
+    ├── generalize_pick_place.py    ├── planners/
+    ├── script_3_open_grasp.py      │   ├── base.py
+    ├── pddl/                       │   ├── fast_downward.py
+    │   ├── domain.pddl             │   └── llm_planner.py
+    │   └── streams.pddl            └── long_horizon_grill_pddl_files/
+    └── grill_task2/                    ├── domain.pddl
+        ├── various_scripts.py          ├── problem.pddl
+        └── ...                         └── streams.pddl
+    
+    Many task-specific scripts      Clean modular structure
+    Experimental iterations         Production-ready
+    Research-oriented               Extensible framework
+
+
+10. EXECUTION FLOW
+================================================================================
+
+    $ python run.py --task LongHorizonGrillTask --execute
+    
+    1. Parse Arguments
+       └── task="LongHorizonGrillTask", execute=True
+    
+    2. Load Configuration
+       └── CoastConfig.from_task("LongHorizonGrillTask")
+           └── Sets domain.pddl, problem.pddl, streams.pddl paths
+    
+    3. Initialize World
+       └── RLBenchWorld.from_task_name("LongHorizonGrillTask")
+           └── Creates RLBench environment
+           └── Loads task
+           └── Discovers objects
+    
+    4. Create Planner
+       └── create_planner(config)
+           └── FastDownwardPlanner() or LLMPlanner()
+    
+    5. Planning Phase
+       └── run_coast_planning(world, config, planner)
+           ├── Get streams: get_streams(world)
+           ├── Get actions: get_actions(world)
+           ├── Call coast.plan()
+           │   ├── Task planning (symbolic)
+           │   ├── Stream sampling (geometric)
+           │   └── Constraint checking
+           └── Return plan
+    
+    6. Execution Phase (if --execute)
+       └── execute_plan(world, plan)
+           ├── For each action in plan:
+           │   ├── Extract inputs/outputs
+           │   ├── action.execute(inputs, outputs)
+           │   ├── Update simulation
+           │   └── Check success
+           └── Report completion
+
+
+================================================================================
+                            VISUAL SUMMARY
+================================================================================
+
+    VIZ-COAST (Paper)               Repository (Code)
+    
+    VLM → Constraints               Config → World
+       ↓                                ↓
+    COAST TAMP            =        Streams + Actions
+       ↓                                ↓
+    Feasible Plans                 Task Planner
+                                        ↓
+                                   COAST Algorithm
+                                        ↓
+                                   Plan Execution
+
+
+    Key Innovation (Paper):     Key Architecture (Code):
+    ┌─────────────────┐         ┌─────────────────┐
+    │ VLM adds        │         │ Clean modular   │
+    │ constraints     │         │ design          │
+    │ BEFORE planning │         │ Pluggable       │
+    │ (proactive)     │         │ components      │
+    │                 │         │ Reusable        │
+    │ vs.             │         │ framework       │
+    │                 │         │                 │
+    │ Adding after    │         │ Easy to extend  │
+    │ failures        │         │ Production-ready│
+    │ (reactive)      │         │                 │
+    └─────────────────┘         └─────────────────┘
+
+
+================================================================================
+                         THIS VISUALIZATION SHOWS:
+================================================================================
+
+✓ How VIZ-COAST paper concept works
+✓ How repository architecture is organized
+✓ How components interact
+✓ How PDDL and Python integrate
+✓ How your code compares
+✓ How to integrate patterns
+
+Use this alongside the detailed documents for complete understanding!
+
+================================================================================

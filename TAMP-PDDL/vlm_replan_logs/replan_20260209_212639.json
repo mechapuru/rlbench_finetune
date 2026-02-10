@@ -1,0 +1,63 @@
+{
+  "goal": "Keep all groceries in the cupboard and mugs on table",
+  "success": false,
+  "total_cycles": 4,
+  "total_replans": 3,
+  "total_actions_completed": 0,
+  "completed_actions": [],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "is_replan": false,
+      "plan": [
+        "pick(mug_box)",
+        "pick(sugar)",
+        "pick(crackers)",
+        "pick(cheez-it)",
+        "pick(spam)",
+        "pick(dominos)",
+        "pick(mustard)",
+        "pick(smokestack)",
+        "pick(box_lid)"
+      ],
+      "completed_actions": [],
+      "failed_action": "pick(mug_box)",
+      "error_message": "Expected 'place' after 'pick', found pick",
+      "success": false
+    },
+    {
+      "cycle_number": 2,
+      "is_replan": true,
+      "plan": [
+        "place(mug, table)"
+      ],
+      "completed_actions": [],
+      "failed_action": "place(mug, table)",
+      "error_message": "Orphaned 'place' action found (not preceded by 'pick')",
+      "success": false
+    },
+    {
+      "cycle_number": 3,
+      "is_replan": true,
+      "plan": [
+        "place(sugar_box, shelf)"
+      ],
+      "completed_actions": [],
+      "failed_action": "place(sugar_box, shelf)",
+      "error_message": "Orphaned 'place' action found (not preceded by 'pick')",
+      "success": false
+    },
+    {
+      "cycle_number": 4,
+      "is_replan": true,
+      "plan": [
+        "place(cereal_basket, countertop)"
+      ],
+      "completed_actions": [],
+      "failed_action": "place(cereal_basket, countertop)",
+      "error_message": "Orphaned 'place' action found (not preceded by 'pick')",
+      "success": false
+    }
+  ],
+  "failure_reason": "Max replans exceeded"
+}

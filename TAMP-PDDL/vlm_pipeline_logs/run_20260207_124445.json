@@ -1,0 +1,54 @@
+{
+  "start_time": "2026-02-07T12:43:20.437274",
+  "config": {
+    "use_mock_vlm": false,
+    "use_real_env": false,
+    "headless": false,
+    "max_replan_attempts": 3,
+    "save_logs": true,
+    "log_dir": "vlm_pipeline_logs",
+    "vlm_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "vlm_4bit": true
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "type": "initial",
+      "plan_result": {
+        "success": true,
+        "skeleton": [
+          "open-lid(box_lid)",
+          "pick(mug_inside_box)",
+          "place(mug_inside_box, placement_boundary)",
+          "pick(soup)",
+          "place(soup, cupboard_boundary)"
+        ],
+        "inference_time": 81.38246750831604
+      },
+      "execution_result": {
+        "status": "ik_failure",
+        "completed": 0,
+        "total": 5,
+        "error": "'NoneType' object has no attribute 'get_object'"
+      }
+    },
+    {
+      "cycle": 1,
+      "type": "replan",
+      "plan_result": {
+        "success": false,
+        "skeleton": [],
+        "inference_time": 4.044796466827393
+      },
+      "execution_result": null
+    }
+  ],
+  "final_result": {
+    "goal": "Keep groceries in cupboard and mugs inside box",
+    "success": false,
+    "total_cycles": 2,
+    "final_status": "ik_failure",
+    "actions_completed": 0,
+    "actions_total": 5
+  }
+}
