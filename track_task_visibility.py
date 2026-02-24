@@ -122,15 +122,40 @@ def main():
 
             print("Getting live demo...")
             try:
+                # Provide dummy env to match wrapper pattern in dynamic_state_extractor
+                sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'TAMP-PDDL'))
+                from vlm_pipeline.background_extractor import BackgroundStateExtractor
+                
+                class DummyEnv:
+                    def __init__(self, rlbench_env):
+                        self.rlbench_env = rlbench_env
+                    def get_object(self, name):
+                        try:
+                            from pyrep.objects.shape import Shape
+                            return Shape(name)
+                        except:
+                            return None
+                            
+                bg_extractor = BackgroundStateExtractor(DummyEnv(env), task_class_name)
+                bg_extractor.start()
+                
                 demo = task.get_demos(amount=1, live_demos=True)[0]
                 print(f"Demo generated with {len(demo)} steps.")
                 
                 for i, demo_obs in enumerate(demo):
                     tracker.update(demo_obs, i + 1)
+                    
+                bg_extractor.stop()
                 
+                # Print final extracted state seen by the agent
+                final_state = bg_extractor.get_latest_state()
+                if final_state:
+                    print("\n\n=== Final Semantic State Handed to Planner ===")
+                    print(final_state)
+                    
                 tracker.print_summary()
             except Exception as e:
-                print(f"Failed to get demo: {e}")
+                print(f"\nFailed to get demo: {e}")
 
     finally:
         env.shutdown()

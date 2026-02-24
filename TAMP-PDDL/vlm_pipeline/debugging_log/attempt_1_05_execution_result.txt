@@ -1,0 +1,4 @@
+{
+  "status": "error",
+  "message": "'PDDLExecutor' object has no attribute '_run_pick_place'"
+}

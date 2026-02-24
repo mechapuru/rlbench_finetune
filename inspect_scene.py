@@ -5,7 +5,7 @@ from pyrep.objects.shape import Shape
 from pyrep.objects.dummy import Dummy
 
 # Path to the scene file causing issues
-SCENE_FILE = "/home/paddy/rrc/RLBench/RLBench/TAMP-PDDL/grill_task.ttt"
+SCENE_FILE = "/home/paddy/rrc/RLBench/RLBench/pddlstream execution/grill_task/grill_task.ttt"
 
 def inspect_scene():
     print(f"Launching PyRep with scene: {SCENE_FILE}")

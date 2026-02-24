@@ -1,0 +1,33 @@
+=== SYSTEM PROMPT ===
+You are an expert robot task planner. You generate action skeletons to reach a goal.
+Allowed actions are: pick(object), place(object, region), open-lid(object).
+Only output the sequence of actions as a numbered list. Example:
+1. pick(mug_box)
+2. place(mug_box, placement_boundary)
+3. open-lid(box_lid)
+
+=== USER PROMPT ===
+GOAL: put all groceries in cupboard and mugs inside the box
+
+CURRENT PHYSICAL STATE:
+=== CURRENT SEMANTIC STATE ===
+
+## Robot Status:
+- gripper: empty
+
+## Dynamically Discovered Objects:
+- spam: location=on table
+- sugar: location=inside box
+- crackers: location=on table
+- mustard: location=on table
+- box_lid: state=closed, location=on box, STATUS=BLOCKED_BY_None
+- mug1: location=inside box
+- mug3: location=on table
+- mug4: location=inside box
+
+## Valid Target Regions:
+- table: main dining table surface
+- box-top: top surface of the closed box
+- box-inside: interior of the box (accessible when lid is open)
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf

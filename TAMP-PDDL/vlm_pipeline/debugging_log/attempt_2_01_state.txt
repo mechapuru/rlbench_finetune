@@ -1,0 +1,21 @@
+=== CURRENT SEMANTIC STATE ===
+
+## Robot Status:
+- gripper: empty
+
+## Dynamically Discovered Objects:
+- spam: location=on table
+- sugar: location=inside box
+- crackers: location=on table
+- mustard: location=inside box, STATUS=BLOCKED_BY_sugar
+- box_lid: state=open, location=on box, STATUS=BLOCKED_BY_None
+- mug1: location=inside box
+- mug3: location=on table
+- mug4: location=inside box
+
+## Valid Target Regions:
+- table: main dining table surface
+- box-top: top surface of the closed box
+- box-inside: interior of the box (accessible when lid is open)
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf

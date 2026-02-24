@@ -355,6 +355,26 @@ class ExecutionMonitor:
             "last_failure": last_failure.to_dict(),
             "failure_types": [f.failure_type.value for f in failures]
         }
+        
+    def get_llm_failure_context(self) -> Optional[str]:
+        """Translate the last failure into a causal semantic string for the LLM."""
+        failures = [f for f in self.execution_log if not f.success]
+        if not failures:
+            return None
+            
+        f = failures[-1]
+        context = f"FAILURE TYPE: {f.failure_type.name}\n"
+        context += f"REASON: {f.message}\n"
+        if f.blocking_object:
+            context += f"CRITICAL: Action blocked by '{f.blocking_object}'. You MUST prioritize moving changing the state of the blocking object.\n"
+            
+        if f.failure_type in [FailureType.NO_IK_SOLUTION, FailureType.NO_MOTION_PLAN, FailureType.NO_GRASP_FOUND, FailureType.PDDL_NO_PLAN]:
+            context += "SUGGESTION: The target object is physically unreachable. It might be blocked by a nearby object. Consider moving obstacles out of the way first."
+            
+        if f.failure_type in [FailureType.GRASP_FAILED, FailureType.PLACEMENT_FAILED, FailureType.OBJECT_DROPPED]:
+            context += "SUGGESTION: The object slipped or was dropped during physical execution. Please re-evaluate your plan using the NEW physical state."
+            
+        return context
 
 
 def classify_pddl_failure(error_message: str) -> FailureType:

@@ -8,7 +8,7 @@ from pyrep.objects.vision_sensor import VisionSensor
 from pyrep.const import ConfigurationPathAlgorithms
 from pyrep.backend import sim
 
-SCENE_FILE = "/home/naren/iiith/Long_Horizon/TAMP-PDDL/task_design_proposal_variation_1.ttt"
+SCENE_FILE = "/home/paddy/rrc/RLBench/RLBench/pddlstream execution/grill_task/grill_task.ttt"
 
 class RLBenchKitchenEnv:
     def __init__(self, headless=True):

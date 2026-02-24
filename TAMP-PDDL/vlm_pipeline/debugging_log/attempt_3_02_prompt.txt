@@ -1,0 +1,37 @@
+=== SYSTEM PROMPT ===
+You are an expert robot task planner. You generate action skeletons to reach a goal.
+Allowed actions are: pick(object), place(object, region), open-lid(object).
+Only output the sequence of actions as a numbered list. Example:
+1. pick(mug_box)
+2. place(mug_box, placement_boundary)
+3. open-lid(box_lid)
+
+=== USER PROMPT ===
+GOAL: put all groceries in cupboard and mugs inside the box
+
+CURRENT PHYSICAL STATE:
+=== CURRENT SEMANTIC STATE ===
+
+## Robot Status:
+- gripper: empty
+
+## Dynamically Discovered Objects:
+- spam: location=on table
+- crackers: location=on table
+- mustard: location=inside box, STATUS=BLOCKED_BY_mug1
+- box_lid: state=open, location=on box, STATUS=BLOCKED_BY_None
+- mug1: location=inside box
+- mug3: location=inside box
+- mug4: location=inside box
+
+## Valid Target Regions:
+- table: main dining table surface
+- box-top: top surface of the closed box
+- box-inside: interior of the box (accessible when lid is open)
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf
+
+PREVIOUS FAILURE:
+Failed at action: unknown. Error: None
+PAST PLANS ATTEMPTED: [["ActionSkeleton(action_name='open-lid', args=('box_lid',))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))", "ActionSkeleton(action_name='open-lid', args=('box_lid',))", "ActionSkeleton(action_name='pick', args=('sugar',))", "ActionSkeleton(action_name='place', args=('sugar', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('spam',))", "ActionSkeleton(action_name='open-lid', args=('box_lid',))", "ActionSkeleton(action_name='pick', args=('sugar',))", "ActionSkeleton(action_name='place', args=('sugar', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('spam',))", "ActionSkeleton(action_name='place', args=('spam', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('crackers',))", "ActionSkeleton(action_name='place', args=('crackers', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mustard',))", "ActionSkeleton(action_name='place', args=('mustard', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mug3',))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))", "ActionSkeleton(action_name='open-lid', args=('box_lid',))", "ActionSkeleton(action_name='pick', args=('sugar',))", "ActionSkeleton(action_name='place', args=('sugar', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('spam',))", "ActionSkeleton(action_name='place', args=('spam', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('crackers',))", "ActionSkeleton(action_name='place', args=('crackers', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mustard',))", "ActionSkeleton(action_name='place', args=('mustard', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mug3',))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))"], ["ActionSkeleton(action_name='pick', args=('mug3',))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))", "ActionSkeleton(action_name='pick', args=('sugar',))", "ActionSkeleton(action_name='place', args=('sugar', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mustard',))", "ActionSkeleton(action_name='place', args=('mustard', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('spam',))", "ActionSkeleton(action_name='place', args=('spam', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('crackers',))", "ActionSkeleton(action_name='place', args=('crackers', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mug3',))", "ActionSkeleton(action_name='place', args=('mug3', 'box-inside'))", "ActionSkeleton(action_name='pick', args=('sugar',))", "ActionSkeleton(action_name='place', args=('sugar', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('mustard',))", "ActionSkeleton(action_name='place', args=('mustard', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('spam',))", "ActionSkeleton(action_name='place', args=('spam', 'cupboard_boundary'))", "ActionSkeleton(action_name='pick', args=('crackers',))", "ActionSkeleton(action_name='place', args=('crackers', 'cupboard_boundary'))"]]
+Please generate a NEW plan that resolves this failure by changing the physical state.
