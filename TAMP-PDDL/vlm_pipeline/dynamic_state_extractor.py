@@ -82,21 +82,83 @@ class DynamicStateExtractor:
             return False
 
     def get_scene_objects(self) -> List[Tuple[str, Object]]:
-        """Scans the open world for all dynamic/interactable objects."""
+        """Scans the open world for all dynamic/interactable objects.
+        Filters objects to only those currently visible to cameras using PyRep's 
+        native color-coded mask rendering.
+        """
         found_objects = []
+        visible_handles = set()
+        
+        try:
+            from pyrep.objects.vision_sensor import VisionSensor
+            from pyrep.const import RenderMode
+            import numpy as np
+            
+            # The RLBench .ttt scene has hidden duplicate cameras ending in _mask
+            mask_cams = [
+                'cam_over_shoulder_left_mask', 
+                'cam_over_shoulder_right_mask', 
+                'cam_overhead_mask', 
+                'cam_wrist_mask', 
+                'cam_front_mask'
+            ]
+            
+            for cam_name in mask_cams:
+                try:
+                    sensor = VisionSensor(cam_name)
+                    sensor.handle_explicitly()
+                    # RLBench tasks have these pre-set to OPENGL_COLOR_CODED
+                    rgb = sensor.capture_rgb()
+                    
+                    # RLBench's exact translation: Handle = R + G*256 + B*256*256
+                    # (where RGB in capture_rgb is scaled [0, 1])
+                    rgb_coded_handles = rgb * 255.0
+                    handles_array = (rgb_coded_handles[:, :, 0] +
+                                     rgb_coded_handles[:, :, 1] * 256 +
+                                     rgb_coded_handles[:, :, 2] * 256 * 256)
+                    
+                    found = np.unique(np.round(handles_array).astype(np.int32))
+                    visible_handles.update(found)
+                    print(f"[StateExtractor] Camera {cam_name} generated mask with {len(found)} handles.")
+                except Exception as e:
+                    print(f"[StateExtractor] Skipped camera {cam_name}: {e}")
+            
+            if 0 in visible_handles:
+                visible_handles.remove(0) # Background/floor
+                
+            print(f"[StateExtractor] Total visible handles extracted: {len(visible_handles)}")
+            
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"[StateExtractor] Error reading visibility masks: {e}")
+
         try:
             handles = sim.simGetObjects(sim.sim_handle_all)
             for h in handles:
                 if self._is_dynamic_shape(h):
+                    
                     obj = Object.get_object(h)
                     name = obj.get_name()
+                    
+                    # Filter out non-visible objects (if masks worked)
+                    if len(visible_handles) > 0:
+                        try:
+                            # A PyRep object can be compound, so its visual meshes might have different handles
+                            tree_handles = set(c.get_handle() for c in obj.get_objects_in_tree())
+                            if not tree_handles.intersection(visible_handles):
+                                continue
+                        except Exception as e:
+                            # Fallback if get_objects_in_tree fails
+                            if h not in visible_handles:
+                                continue
                     # Filter out purely structural pieces, visual markers, or robot components
                     name_lower = name.lower()
                     if "visual" not in name_lower and "respondable" not in name_lower and "panda" not in name_lower and "contact" not in name_lower and "force" not in name_lower and "prox_sensor" not in name_lower:
-                        obj = Object.get_object(h)
                         found_objects.append((name, obj))
             
             # Also always include the 'box_lid' even if it's considered kinematic/static
+            # (And even if it's sometimes missed by the segmentation map if it's too thin)
             lid = self.env.get_object('box_lid')
             if lid and not any(n == 'box_lid' for n, _ in found_objects):
                 found_objects.append(('box_lid', lid))
