@@ -23,7 +23,7 @@ python ground_truth_orchestrator.py
 Run direct VLM planning/execution for the kitchen goal:
 
 ```bash
-python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs on table"
+python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs inside the box"
 ```
 
 ### Failure-triggered replanning pipeline
@@ -31,13 +31,13 @@ python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all m
 Run replanning when execution failures occur:
 
 ```bash
-python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table"
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs inside the box"
 ```
 
 Run the same flow with the mock planner for demonstration/debugging:
 
 ```bash
-python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table" --mock
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs inside the box" --mock
 ```
 
 ### Failure-case test suite
