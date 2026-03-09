@@ -1,0 +1,150 @@
+(.venv) naren@pop-os:~/iiith/Long_Horizon/TAMP-PDDL$ python -m vlm_pipeline.vlm_main --goal "Keep all groceries in the cupboard and mugs on table"
+[Import] Using VLMExecutorV2 with PDDL execution
+[Pipeline] Using real VLM: Qwen/Qwen2-VL-2B-Instruct
+
+============================================================
+VLM PIPELINE INITIALIZATION
+============================================================
+Loading VLM: Qwen/Qwen2-VL-2B-Instruct
+Using 4-bit quantization: False
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`.
+Loading with float16 precision...
+Fetching 2 files: 100%|██████████████████████████████████████| 2/2 [00:00<00:00, 5675.65it/s]
+Download complete: : 0.00B [00:00, ?B/s]                               | 0/2 [00:00<?, ?it/s]
+Loading weights: 100%|█| 729/729 [00:01<00:00, 680.23it/s, Materializing param=model.visual.p
+VLM loaded successfully!
+[Pipeline] Loading RLBench environment...
+[Pipeline] Settling physics...
+[Pipeline] Environment ready
+[Pipeline] Initialization complete!
+
+============================================================
+VLM PIPELINE RUN
+============================================================
+Goal: Keep all groceries in the cupboard and mugs on table
+
+[Pipeline] Planning for goal: Keep all groceries in the cupboard and mugs on table
+[Context Aggregator] Captured 5 frames
+[Context Aggregator] State text preview:
+=== CURRENT STATE (PDDL-style) ===
+
+## Robot:
+- gripper: empty
+- (hand-empty): True
+
+## Objects:
+- mug_box: type=mug, location=on top of closed box, in-region=box-top
+- mug_inside_box: type=mug, location=inside the box, in-region=box-inside, BLOCKED BY box_lid
+- box_lid: type=lid, location=on box, state=closed, BLOCKED BY mug_box
+- mug_table: type=mug, location=on table, in-region=table
+- mug_cupboard: type=mug, location=inside cupboard, in-region=cupboard_boundary
+- soup: type=can, location=on table, in-region=table
+- mustard: type=bottle, location=on table, in-region=table
+- spam: type=tin, location=on table, in-region=table
+- sugar: type=box, location=on table, in-region=table
+- crackers: type=cereal, location=on table, in-region=table
+
+## Lid State:
+- (lid-closed box_lid): True
+- (lid-opened box_lid): False
+
+## Target Regions:
+- table: main dining table surface
+- box-top: top surface of the closed box
+- box-inside: interior of the box (accessible when lid is open)
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf
+- groceries_boundary: groceries storage area
+[Context Aggregator] User prompt length: 1451
+[Pipeline] Prompt bundle created.
+[VLM Planner] Input text length: 2142
+[VLM Planner] Input text preview: <|im_start|>system
+You are a robot task planner for a kitchen manipulation task. You control a Panda robot arm.
+
+Your job is to output a sequence of actions to achieve the given goal. You MUST use ONL...
+[VLM Planner] Input tensors on device: cuda:0, shape: torch.Size([1, 2887])
+[VLM Planner] Starting generation...
+[VLM Planner] Generation complete.
+[VLM Planner] Raw output: pick(mug_box), pick(sugar), pick(crackers), pick(cheez-it), pick(spam), pick(dominos), pick(mustard), pick(smokestack), pick(box_lid), place(mug_table), place(groceries_boundary), place(placement_boundary), close-lid(box_lID), close-box(box_l_id), close-mug_mug_box
+Warning: place expects 2 args, got 1
+Warning: place expects 2 args, got 1
+Warning: place expects 2 args, got 1
+[Pipeline] VLM inference time: 4.17s
+[Pipeline] Raw output:
+pick(mug_box), pick(sugar), pick(crackers), pick(cheez-it), pick(spam), pick(dominos), pick(mustard), pick(smokestack), pick(box_lid), place(mug_table), place(groceries_boundary), place(placement_boundary), close-lid(box_lID), close-box(box_l_id), close-mug_mug_box
+[Pipeline] Parsed 9 actions:
+  1. pick(mug_box)
+  2. pick(sugar)
+  3. pick(crackers)
+  4. pick(cheez-it)
+  5. pick(spam)
+  6. pick(dominos)
+  7. pick(mustard)
+  8. pick(smokestack)
+  9. pick(box_lid)
+[Pipeline] WARNING: Plan validation errors:
+  - Step 2: Cannot pick sugar, already holding mug_box
+  - Step 3: Cannot pick crackers, already holding sugar
+  - Step 4: Unknown object/region 'cheez-it'
+  - Step 4: Cannot pick cheez-it, already holding crackers
+  - Step 5: Cannot pick spam, already holding cheez-it
+  - Step 6: Unknown object/region 'dominos'
+  - Step 6: Cannot pick dominos, already holding spam
+  - Step 7: Cannot pick mustard, already holding dominos
+  - Step 8: Unknown object/region 'smokestack'
+  - Step 8: Cannot pick smokestack, already holding mustard
+  - Step 9: Cannot pick box_lid, already holding smokestack
+
+[Pipeline] Executing plan with 9 actions
+
+[ExecutorV2] Starting plan execution (9 actions)
+[ExecutorV2] Plan: ['pick(mug_box)', 'pick(sugar)', 'pick(crackers)', 'pick(cheez-it)', 'pick(spam)', 'pick(dominos)', 'pick(mustard)', 'pick(smokestack)', 'pick(box_lid)']
+  [Executor] Returning to Home...
+
+[ExecutorV2] Processing Action 1/9: pick(mug_box)
+Traceback (most recent call last):
+  File "/home/naren/iiith/Long_Horizon/TAMP-PDDL/vlm_pipeline/vlm_executor_v2.py", line 788, in execute_plan
+    raise Exception(f"Expected 'place' after 'pick', found {next_action.action_name}")
+Exception: Expected 'place' after 'pick', found pick
+
+============================================================
+EXECUTION STOPPED - ERROR ENCOUNTERED
+============================================================
+
+❌ FAILED at action 1/9
+   Error: Expected 'place' after 'pick', found pick
+
+✓ COMPLETED ACTIONS: None
+
+✗ NOT EXECUTED (9):
+   1. pick(mug_box)
+   2. pick(sugar)
+   3. pick(crackers)
+   4. pick(cheez-it)
+   5. pick(spam)
+   6. pick(dominos)
+   7. pick(mustard)
+   8. pick(smokestack)
+   9. pick(box_lid)
+
+⚠ FAILED ACTION: pick(mug_box)
+
+============================================================
+Replanning DISABLED - execution stopped.
+============================================================
+[Pipeline] Log saved to: vlm_pipeline_logs/run_20260209_212240.json
+
+============================================================
+FINAL RESULT
+============================================================
+{
+  "goal": "Keep all groceries in the cupboard and mugs on table",
+  "success": false,
+  "total_cycles": 1,
+  "final_status": "failed",
+  "actions_completed": 0,
+  "actions_total": 9
+}
+
+Press Ctrl+C to exit...

@@ -1,0 +1,199 @@
+================================================================================
+MOCK REPLANNING DEMO - COMPLETE ACTION SEQUENCE
+================================================================================
+
+This document lays out EXACTLY what happens in each phase of the demo.
+
+GOAL: "Put all groceries in cupboard and all mugs on table"
+
+KEY CONSTRAINTS:
+- mug_cupboard (mug3) is INSIDE the cupboard → blocks cupboard_boundary
+- mug_box (mug2) is ON TOP of the box → blocks box_lid from sliding
+- mug_inside_box (mug4) is UNKNOWN until lid is opened
+- sugar and crackers go to cupboard_boundary_top (top shelf)
+- soup, mustard, spam go to cupboard_boundary (inside)
+
+================================================================================
+INITIAL PLAN (VLM OUTPUT - DELIBERATELY WRONG)
+================================================================================
+
+This plan is WRONG because:
+1. It doesn't move mug_cupboard before putting groceries in cupboard_boundary
+2. It doesn't move mug_box before opening the lid
+3. It doesn't know about mug_inside_box at all
+
+INITIAL PLAN:
+-------------
+ 1. pick(sugar)
+ 2. place(sugar, cupboard_boundary_top)        ← SUCCESS (top shelf is clear)
+ 3. pick(crackers)
+ 4. place(crackers, cupboard_boundary_top)     ← SUCCESS (top shelf is clear)
+ 5. pick(soup)                                 ← ❌ FAIL: mug_cupboard blocks cupboard_boundary!
+ 6. place(soup, cupboard_boundary)
+ 7. pick(mustard)
+ 8. place(mustard, cupboard_boundary)
+ 9. pick(spam)
+10. place(spam, cupboard_boundary)
+11. open-lid(box_lid)
+12. pick(mug_cupboard)
+13. place(mug_cupboard, placement_boundary)
+14. pick(mug_box)
+15. place(mug_box, placement_boundary)
+
+EXECUTION:
+- Actions 1-4 SUCCEED (sugar + crackers to top shelf)
+- Action 5 FAILS at pick(soup) - precondition check fails
+- Error: "BLOCKED: Cannot pick soup for cupboard_boundary - mug_cupboard is inside cupboard"
+
+
+explicitly 
+
+>>> TRIGGERS REPLAN 1
+
+================================================================================
+REPLAN 1: MOVE MUG_CUPBOARD FIRST
+================================================================================
+
+Reason: mug_cupboard is blocking cupboard_boundary
+Solution: Move mug_cupboard to table first, then continue with remaining groceries
+
+REPLAN 1 ACTIONS:
+-----------------
+ 1. pick(mug_cupboard)
+ 2. place(mug_cupboard, placement_boundary)    ← SUCCESS
+ 3. pick(soup)
+ 4. place(soup, cupboard_boundary)             ← SUCCESS (now clear!)
+ 5. pick(mustard)
+ 6. place(mustard, cupboard_boundary)          ← SUCCESS
+ 7. pick(spam)
+ 8. place(spam, cupboard_boundary)             ← SUCCESS
+ 9. open-lid(box_lid)                          ← ❌ FAIL: mug_box blocks!
+10. pick(mug_box)
+11. place(mug_box, placement_boundary)
+
+EXECUTION:
+- Actions 1-8 SUCCEED (mug_cupboard moved, all 3 groceries placed)
+- Action 9 FAILS at open-lid(box_lid)
+- Error: "BLOCKED: mug_box is on top of box_lid"
+
+>>> TRIGGERS REPLAN 2
+
+================================================================================
+REPLAN 2: MOVE MUG_BOX FIRST
+================================================================================
+
+Reason: mug_box is blocking box_lid from sliding open
+Solution: Move mug_box to table first, then open lid
+
+REPLAN 2 ACTIONS:
+-----------------
+ 1. pick(mug_box)
+ 2. place(mug_box, placement_boundary)         ← SUCCESS
+ 3. open-lid(box_lid)                          ← SUCCESS (now clear!)
+
+EXECUTION:
+- Actions 1-3 ALL SUCCEED
+
+After open-lid completes:
+>>> 🔍 DISCOVERY: mug_inside_box detected!
+>>> This object was NOT in any previous plan!
+
+>>> TRIGGERS REPLAN 3
+
+================================================================================
+REPLAN 3: NEWLY DISCOVERED OBJECT
+================================================================================
+
+Reason: After opening lid, we now SEE mug_inside_box which was previously hidden
+Solution: Add this newly discovered mug to the plan
+
+REPLAN 3 ACTIONS:
+-----------------
+ 1. pick(mug_inside_box)
+ 2. place(mug_inside_box, placement_boundary)  ← SUCCESS
+
+EXECUTION:
+- Actions 1-2 SUCCEED
+
+>>> TASK COMPLETE!
+
+================================================================================
+SUMMARY OF ALL COMPLETED ACTIONS (IN ORDER)
+================================================================================
+
+From INITIAL PLAN:
+ 1. pick(sugar)
+ 2. place(sugar, cupboard_boundary_top)
+ 3. pick(crackers)
+ 4. place(crackers, cupboard_boundary_top)
+    ← FAIL at place(soup, cupboard_boundary)
+
+From REPLAN 1:
+ 5. pick(mug_cupboard)
+ 6. place(mug_cupboard, placement_boundary)
+ 7. pick(soup)
+ 8. place(soup, cupboard_boundary)
+ 9. pick(mustard)
+10. place(mustard, cupboard_boundary)
+11. pick(spam)
+12. place(spam, cupboard_boundary)
+    ← FAIL at open-lid(box_lid)
+
+From REPLAN 2:
+13. pick(mug_box)
+14. place(mug_box, placement_boundary)
+15. open-lid(box_lid)
+    ← DISCOVERY: mug_inside_box
+
+From REPLAN 3:
+16. pick(mug_inside_box)
+17. place(mug_inside_box, placement_boundary)
+
+TOTAL: 17 VLM-level actions (matches ground truth!)
+
+================================================================================
+REPLAN TRIGGERS SUMMARY
+================================================================================
+
+| Replan | Trigger Action              | Error                                    |
+|--------|-----------------------------|-----------------------------------------|
+| 1      | pick(soup)                  | mug_cupboard blocks cupboard_boundary    |
+| 2      | open-lid(box_lid)           | mug_box blocks box_lid                   |
+| 3      | (discovery after open-lid)  | mug_inside_box was unknown, now visible  |
+
+================================================================================
+VISUAL TIMELINE
+================================================================================
+
+CYCLE 1 (Initial Plan):
+  [sugar→top] [crackers→top] [pick soup] ← FAIL!
+       ✓            ✓            ❌
+
+CYCLE 2 (Replan 1):
+  [mug_cupboard→table] [soup→cupboard] [mustard→cupboard] [spam→cupboard] [open-lid] ← FAIL!
+           ✓                  ✓               ✓                 ✓             ❌
+
+CYCLE 3 (Replan 2):
+  [mug_box→table] [open-lid] ← SUCCESS + DISCOVERY!
+         ✓            ✓ 🔍
+
+CYCLE 4 (Replan 3):
+  [mug_inside_box→table] ← SUCCESS!
+            ✓
+
+================================================================================
+NOTES FOR IMPLEMENTATION
+================================================================================
+
+1. The _check_preconditions() method should:
+   - Check if mug_cupboard/mug3 is in cupboard_boundary before allowing place there
+   - Check if mug_box/mug2 is on box_boundary before allowing open-lid
+
+2. The "discovery" is simulated - after open-lid succeeds, print the discovery
+   message and trigger replan 3.
+
+3. All pick+place pairs should be executed together.
+
+4. Video should record throughout, with extra frames at failure points.
+
+================================================================================

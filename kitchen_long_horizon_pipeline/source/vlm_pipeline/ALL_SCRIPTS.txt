@@ -1,0 +1,37 @@
+#full task, done all manually. s
+#sped up video is saved in /home/naren/iiith/Long_Horizon/TAMP-PDDL/orchestrator_videos/combined_5view_labeled.mp4
+=> python ground_truth_orchestrator.py
+
+
+#Full task, whatever VLM outputs, direct execution. 
+#prompt is this: vlm_context_aggregator.py:334-378 lines
+
+=> python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs on table"
+
+
+
+# Run all failure case tests
+  ✓ 1. OBJECT_BLOCKED - Open lid while mug_box on top
+  ✓ 2. LID_CLOSED - Pick mug inside closed box
+  ✓ 3. OBJECT_NOT_FOUND - Pick non-existent object
+  ✓ 4. VALID - Move mug_box to table (should succeed)
+  ✓ 5. ORPHAN_PLACE - Place without pick
+  ✓ 6. PICK_MISMATCH - Pick/Place different objects
+
+=> python -m vlm_pipeline.test_failure_cases
+
+
+#Full task, whatever VLM outputs, direct execution. 
+#prompt is this: vlm_context_aggregator.py:334-378 lines
+#this is wrong, pretty much al the time.
+
+=> python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs on table"
+
+#this is why we need replanning
+#replans whenever one of the failures happen.
+#since I am using a 2B model only, this also sucks.
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table" 
+
+#For demonstration purposes, this is how it will finally look like, once replanning is done properly...
+#demo of how replanning should occur.
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table" --mock

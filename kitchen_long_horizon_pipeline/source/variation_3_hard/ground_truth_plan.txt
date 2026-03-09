@@ -1,0 +1,19 @@
+Variation 3 Hard - Ground Truth Sequence
+
+Scene:
+task1_variation3.ttt
+
+Goal:
+- Place all groceries in cupboard.
+- Place all mugs in box.
+
+Execution order:
+1. Pick mug in cupboard -> placement_boundary
+2. Pick grocery on table -> cupboard_boundary
+3. Pick mug on box -> placement_boundary
+4. Slide open box lid
+5. Pick grocery in box -> cupboard_boundary
+6. Pick all three mugs on table -> box_boundary (non-overlapping slots)
+
+Between every task:
+- Return robot to home configuration

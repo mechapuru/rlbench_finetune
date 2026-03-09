@@ -1,0 +1,18 @@
+Variation 1 Easy - Ground Truth Sequence
+
+Scene:
+task1_variation1.ttt
+
+Goal:
+- Place all mugs in the staging area first (placement boundary), then proceed with box/cupboard flow.
+- Place groceries inside cupboard.
+
+Execution order:
+1. Pick mug on box -> placement_boundary
+2. Pick mug in cupboard -> placement_boundary
+3. Slide open box lid
+4. Pick grocery inside box -> cupboard_boundary
+5. Pick grocery on table -> cupboard_boundary
+
+Between every task:
+- Return robot to home configuration

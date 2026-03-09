@@ -1,0 +1,20 @@
+# VLM Output for Testing: Complete Kitchen Task
+# This output represents a properly planned sequence matching the ground truth
+
+1. pick(mug_cupboard)
+2. place(mug_cupboard, placement_boundary)
+3. pick(soup)
+4. place(soup, cupboard_boundary)
+5. pick(mustard)
+6. place(mustard, cupboard_boundary)
+7. pick(spam)
+8. place(spam, cupboard_boundary)
+9. pick(sugar)
+10. place(sugar, cupboard_boundary_top)
+11. pick(crackers)
+12. place(crackers, cupboard_boundary_top)
+13. pick(mug_box)
+14. place(mug_box, placement_boundary)
+15. open_lid(box_lid)
+16. pick(mug_inside_box)
+17. place(mug_inside_box, placement_boundary)

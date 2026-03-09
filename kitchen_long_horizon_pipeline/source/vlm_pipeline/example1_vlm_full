@@ -1,0 +1,169 @@
+(.venv) naren@pop-os:~/iiith/Long_Horizon/TAMP-PDDL$ python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs on table"
+[Import] Using VLMExecutorV2 with PDDL execution
+[Pipeline] Using real VLM: Qwen/Qwen2-VL-7B-Instruct
+
+============================================================
+VLM PIPELINE INITIALIZATION
+============================================================
+Loading VLM: Qwen/Qwen2-VL-7B-Instruct
+Using 4-bit quantization: True
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`.
+Configuring 4-bit quantization...
+Fetching 5 files: 100%|█████████████████████████████████████| 5/5 [00:00<00:00, 17985.87it/s]
+Download complete: : 0.00B [00:00, ?B/s]                               | 0/5 [00:00<?, ?it/s]
+Loading weights:  21%|▏| 156/730 [00:04<00:15, 36.81it/s, Materializing param=model.language_
+4-bit quantization failed: CUDA out of memory. Tried to allocate 26.00 MiB. GPU 0 has a total capacity of 7.53 GiB of which 18.69 MiB is free. Including non-PyTorch memory, this process has 7.50 GiB memory in use. Of the allocated memory 7.36 GiB is allocated by PyTorch, and 25.13 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Cleaning up memory and falling back to float16...
+Loading with float16 precision...
+Fetching 5 files: 100%|████████████████████████████████████| 5/5 [00:00<00:00, 122640.47it/s]
+Download complete: : 0.00B [00:00, ?B/s]                               | 0/5 [00:00<?, ?it/s]
+Loading weights: 100%|█| 730/730 [00:16<00:00, 45.62it/s, Materializing param=model.visual.pa
+Some parameters are on the meta device because they were offloaded to the cpu.
+VLM loaded successfully!
+[Pipeline] Loading RLBench environment...
+[Pipeline] Settling physics...
+[Pipeline] Environment ready
+[Pipeline] Initialization complete!
+
+============================================================
+VLM PIPELINE RUN
+============================================================
+Goal: Keep all groceries in cupboard and all mugs on table
+
+[Pipeline] Planning for goal: Keep all groceries in cupboard and all mugs on table
+[Context Aggregator] Captured 5 frames
+[Context Aggregator] State text preview:
+=== CURRENT STATE (PDDL-style) ===
+
+## Robot:
+- gripper: empty
+- (hand-empty): True
+
+## Objects:
+- mug_box: type=mug, location=on top of closed box, in-region=box-top
+- mug_inside_box: type=mug, location=inside the box, in-region=box-inside, BLOCKED BY box_lid
+- box_lid: type=lid, location=on box, state=closed, BLOCKED BY mug_box
+- mug_table: type=mug, location=on table, in-region=table
+- mug_cupboard: type=mug, location=inside cupboard, in-region=cupboard_boundary
+- soup: type=can, location=on table, in-region=table
+- mustard: type=bottle, location=on table, in-region=table
+- spam: type=tin, location=on table, in-region=table
+- sugar: type=box, location=on table, in-region=table
+- crackers: type=cereal, location=on table, in-region=table
+
+## Lid State:
+- (lid-closed box_lid): True
+- (lid-opened box_lid): False
+
+## Target Regions:
+- table: main dining table surface
+- box-top: top surface of the closed box
+- box-inside: interior of the box (accessible when lid is open)
+- placement_boundary: target area for placing mugs
+- cupboard_boundary: inside the cupboard shelf
+- groceries_boundary: groceries storage area
+[Context Aggregator] User prompt length: 1451
+[Pipeline] Prompt bundle created.
+[VLM Planner] Input text length: 3002
+[VLM Planner] Input text preview: <|im_start|>system
+You are a robot task planner for a kitchen manipulation task. You control a Panda robot arm.
+
+Your job is to output a sequence of actions to achieve the given goal. You MUST use ONL...
+[VLM Planner] Input tensors on device: cuda:0, shape: torch.Size([1, 3109])
+[VLM Planner] Starting generation...
+[VLM Planner] Generation complete.
+[VLM Planner] Raw output: 1. place(soup, placement_boundary)
+2.open-lid(closed box)
+3.place(spam, placementBoundary)
+4.pick(crackers)
+5.place(crackers, cupboard_boundary)
+6.move_to_target_region_for_mug(mug_inside_box)
+7.open-lidar(mug_outside_box)
+8.place(mug_inside_box, cupboad_boundary)
+9.move_to_next_object()
+10.pick(mug_table)
+11.place(mag_table, table)
+[Pipeline] VLM inference time: 156.38s
+[Pipeline] Raw output:
+1. place(soup, placement_boundary)
+2.open-lid(closed box)
+3.place(spam, placementBoundary)
+4.pick(crackers)
+5.place(crackers, cupboard_boundary)
+6.move_to_target_region_for_mug(mug_inside_box)
+7.open-lidar(mug_outside_box)
+8.place(mug_inside_box, cupboad_boundary)
+9.move_to_next_object()
+10.pick(mug_table)
+11.place(mag_table, table)
+[Pipeline] Parsed 8 actions:
+  1. place(soup, placement_boundary)
+  2. open-lid(closed box)
+  3. place(spam, placementBoundary)
+  4. pick(crackers)
+  5. place(crackers, cupboard_boundary)
+  6. place(mug_inside_box, cupboad_boundary)
+  7. pick(mug_table)
+  8. place(mag_table, table)
+[Pipeline] WARNING: Plan validation errors:
+  - Step 1: Cannot place soup, currently holding None
+  - Step 2: Unknown object/region 'closed box'
+  - Step 2: Cannot open lid - mug_box is still on top
+  - Step 3: Unknown object/region 'placementBoundary'
+  - Step 3: Cannot place spam, currently holding None
+  - Step 6: Unknown object/region 'cupboad_boundary'
+  - Step 6: Cannot place mug_inside_box, currently holding None
+  - Step 8: Unknown object/region 'mag_table'
+  - Step 8: Cannot place mag_table, currently holding mug_table
+
+[Pipeline] Executing plan with 8 actions
+
+[ExecutorV2] Starting plan execution (8 actions)
+[ExecutorV2] Plan: ['place(soup, placement_boundary)', 'open-lid(closed box)', 'place(spam, placementBoundary)', 'pick(crackers)', 'place(crackers, cupboard_boundary)', 'place(mug_inside_box, cupboad_boundary)', 'pick(mug_table)', 'place(mag_table, table)']
+  [Executor] Returning to Home...
+
+[ExecutorV2] Processing Action 1/8: place(soup, placement_boundary)
+Traceback (most recent call last):
+  File "/home/naren/iiith/Long_Horizon/TAMP-PDDL/vlm_pipeline/vlm_executor_v2.py", line 860, in execute_plan
+    raise Exception("Orphaned 'place' action found (not preceded by 'pick')")
+Exception: Orphaned 'place' action found (not preceded by 'pick')
+
+============================================================
+EXECUTION STOPPED - ERROR ENCOUNTERED
+============================================================
+
+❌ FAILED at action 1/8
+   Error: Orphaned 'place' action found (not preceded by 'pick')
+
+✓ COMPLETED ACTIONS: None
+
+✗ NOT EXECUTED (8):
+   1. place(soup, placement_boundary)
+   2. open-lid(closed box)
+   3. place(spam, placementBoundary)
+   4. pick(crackers)
+   5. place(crackers, cupboard_boundary)
+   6. place(mug_inside_box, cupboad_boundary)
+   7. pick(mug_table)
+   8. place(mag_table, table)
+
+⚠ FAILED ACTION: place(soup, placement_boundary)
+
+============================================================
+Replanning DISABLED - execution stopped.
+============================================================
+[Pipeline] Log saved to: vlm_pipeline_logs/run_20260209_211045.json
+
+============================================================
+FINAL RESULT
+============================================================
+{
+  "goal": "Keep all groceries in cupboard and all mugs on table",
+  "success": false,
+  "total_cycles": 1,
+  "final_status": "failed",
+  "actions_completed": 0,
+  "actions_total": 8
+}
+
+Press Ctrl+C to exit...

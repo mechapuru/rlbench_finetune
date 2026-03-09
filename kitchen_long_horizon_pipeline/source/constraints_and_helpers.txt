@@ -1,0 +1,34 @@
+CONSTRAINTS AND HELPERS (Derived from Orchestrator & User Request)
+
+1. TASK SEQUENCE
+   - Step 1: Pick 'mug_box' (Mug on top of box) -> Place in 'placement_boundary'.
+   - Step 2: Open 'box_lid' (Grasp -> Slide -> Release -> Return -> Retreat).
+   - Step 3: Pick 'mug_inside_box' (Mug inside box) -> Place in 'cupboard_boundary'.
+   - (Optional Step 4: Pick 'soup' -> Place in 'cupboard_boundary').
+
+2. HOME POSITION RESET
+   - CONSTRAINT: The robot MUST return to the 'home' configuration (initial joint state) immediately after completing a 'place' action.
+   - IMPLEMENTATION: The 'place' primitive should include a retreat-to-home trajectory segment.
+   - HELPER: 'go_home(env)' logic from orchestrator:
+     - Try direct interpolation to home.
+     - If blocked, perform "Evasive Maneuver": Lift End-Effector by +0.25m (Z-axis), then interpolate to home.
+
+3. REGION MAPPING
+   - 'mug_box' -> 'placement_boundary' (NOT 'groceries_boundary').
+   - 'mug_inside_box' -> 'cupboard_boundary'.
+   - 'soup' -> 'cupboard_boundary'.
+
+4. COLLISION & GEOMETRY HELPERS
+   - "Ghost Mode": When planning pick for 'mug_inside_box', temporarily disable collisions for 'box_base' (and 'box_lid' if needed) to allow gripper entry.
+   - Cupboard Pick/Place:
+     - Use Horizontal Grasp (Roll=0 or 180, Pitch=90).
+     - Approach from Front (-X direction relative to cupboard).
+     - Hover Distance: 0.25m.
+   - Box Lid:
+     - Grasp "lengthier" side.
+     - Slide distance: ~80-90% of lid length.
+     - Return to center before retreating.
+
+5. EXPLICIT CONSTRAINTS
+   - Do not touch the lid during other operations (handled by standard collision checking + Ghost Mode selectivity).
+   - Maintain 10cm clearance from cupboard during motions (validated in orchestrator, implicit in PDDL collision checking).

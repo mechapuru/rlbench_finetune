@@ -1,5 +1,13 @@
 This Repo is aimed to reproduce the results of VizCoast [https://arxiv.org/abs/2510.25548] on two tasks specially designed in RLBench to test the system's long Horizon Capabilities
 
+## Added kitchen pipeline snapshot
+
+For the kitchen-task long-horizon pipeline, including VLM planning, replanning, segmentation, remote serving, and the created task variations, see:
+
+- [kitchen_long_horizon_pipeline/README.md](kitchen_long_horizon_pipeline/README.md)
+
+That folder also contains a curated source snapshot under `kitchen_long_horizon_pipeline/source/` and a raw copy manifest in `kitchen_long_horizon_pipeline/COPIED_FILES.txt`.
+
 
 |
 |
