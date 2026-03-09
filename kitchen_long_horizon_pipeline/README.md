@@ -1,5 +1,139 @@
 # Kitchen Long-Horizon Pipeline Snapshot
 
+## Working commands used in the final pipeline
+
+These are the current commands worth preserving from the recent working setup. This section intentionally excludes outdated intermediate/prototype runs.
+
+Important:
+
+- these commands were run from the original local kitchen project root, not from this archival snapshot,
+- the original root was the `TAMP-PDDL` workspace,
+- some commands require the RLBench/CoppeliaSim environment and the project Python environment to already be configured.
+
+### Ground-truth orchestrator
+
+Run the full trusted kitchen execution:
+
+```bash
+python ground_truth_orchestrator.py
+```
+
+### Main VLM pipeline
+
+Run direct VLM planning/execution for the kitchen goal:
+
+```bash
+python -m vlm_pipeline.vlm_main --goal "Keep all groceries in cupboard and all mugs on table"
+```
+
+### Failure-triggered replanning pipeline
+
+Run replanning when execution failures occur:
+
+```bash
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table"
+```
+
+Run the same flow with the mock planner for demonstration/debugging:
+
+```bash
+python -m vlm_pipeline.vlm_with_replanning --goal "Keep all groceries in the cupboard and mugs on table" --mock
+```
+
+### Failure-case test suite
+
+Run the explicit failure checks used for interruption and replan prompting:
+
+```bash
+python -m vlm_pipeline.test_failure_cases
+```
+
+### Live segmentation runner
+
+Run the ground-truth pipeline with live segmentation:
+
+```bash
+python run_live_segmentation.py
+```
+
+Optional Tkinter backend for the live viewer:
+
+```bash
+LIVE_SEG_VIEWER_BACKEND=tkinter python run_live_segmentation.py
+```
+
+### Segmentation-based execution / discovery checks
+
+Run segmentation-backed orchestration:
+
+```bash
+python run_with_segmentation.py
+```
+
+Run the segmentation orchestrator:
+
+```bash
+python run_segmentation_orchestrator.py
+```
+
+Run the lid-opening visibility count check:
+
+```bash
+python run_open_slide_count_check.py
+```
+
+### Live VLM discovery + replanning demos
+
+Run the live discovery/replan pipeline:
+
+```bash
+python run_vlm_discovery_replan_live.py
+```
+
+Run the focused open-lid -> discovery -> replan demo:
+
+```bash
+python run_open_slide_vlm_replan_live.py
+```
+
+### Remote VLM server
+
+Start the remote inference server on the GPU machine:
+
+```bash
+python -m vlm_pipeline.vlm_server --port 8000
+```
+
+Run the lighter model variant:
+
+```bash
+python -m vlm_pipeline.vlm_server --port 8000 --model Qwen/Qwen2-VL-2B-Instruct --no-4bit
+```
+
+Test the remote connection from the client side:
+
+```bash
+python -m vlm_pipeline.vlm_client --url http://localhost:8000
+```
+
+### Variation-specific ground-truth runs
+
+Run the dedicated variation executors:
+
+```bash
+python variation_1_easy/ground_truth_orchestrator_variation1_easy.py
+python variation_2/ground_truth_orchestrator_variation2.py
+python variation_3_hard/ground_truth_orchestrator_variation3_hard.py
+```
+
+Run their live segmentation variants:
+
+```bash
+python variation_1_easy/run_live_segmentation_variation1_easy.py
+python variation_2/run_live_segmentation_variation2.py
+python variation_3_hard/run_live_segmentation_variation3_hard.py
+```
+
 ## What this folder is
 
 This folder is a curated snapshot of the kitchen-task work that lives in the local `TAMP-PDDL` project. It was added into this repository to preserve, document, and publish the long-horizon kitchen pipeline without disturbing the original local workspace.
